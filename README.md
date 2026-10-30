@@ -25,9 +25,9 @@ Dominia's own server: a host creates a lobby and shares its code or link.
 workflow (`.github/workflows/android.yml`) wraps it with Capacitor and
 publishes a debug APK as a build artifact.
 
-Set the repository variable `DOMINIA_SERVER` (for example
-`play.example.com`) to build an app with Create/Join lobby against that
-server; leave it unset for a solo-only app. A server only admits clients
+The workflow builds an app with Create/Join lobby against Dominia's Render
+server (see below); `npm run build-app` without `DOMINIA_SERVER` builds a
+solo-only app. A server only admits clients
 built from its own commit, so deploy the server from the commit the APK was
 built from.
 
@@ -67,9 +67,9 @@ and `RENDER_GIT_COMMIT`, and every push to main redeploys it, so it stays on
 the commit the Android workflow builds.
 
 1. On Render, create a Blueprint from this repository.
-2. Once deployed, set the repository variables `DOMINIA_SERVER` to the
-   service's hostname (`<name>.onrender.com`) and `DOMINIA_SERVER_WORKERS`
-   to `1`, then run the Android workflow.
+2. The Android workflow builds against `dominia-8fm9.onrender.com` with one
+   worker. For another server, set the repository variables
+   `DOMINIA_SERVER` (its hostname) and `DOMINIA_SERVER_WORKERS`.
 
 The rest of this README is OpenFront's own.
 

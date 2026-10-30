@@ -28,14 +28,15 @@ jobs:
       - name: Setup npm
         run: npm install --global --ignore-scripts npm@12.1.0
       - run: npm ci
-      # The repository variable DOMINIA_SERVER (Settings > Secrets and
-      # variables > Actions > Variables) names the Dominia server the app
-      # plays private lobbies on; unset, the app is solo only. Deploy that
-      # server from this same commit: it only admits clients built from it.
+      # The Dominia server the app plays private lobbies on: the Render
+      # service (render.yaml), unless the repository variables
+      # DOMINIA_SERVER / DOMINIA_SERVER_WORKERS (Settings > Secrets and
+      # variables > Actions > Variables) name another. That server must run
+      # this same commit: it only admits clients built from it.
       - run: npm run build-app
         env:
-          DOMINIA_SERVER: ${{ vars.DOMINIA_SERVER }}
-          DOMINIA_SERVER_WORKERS: ${{ vars.DOMINIA_SERVER_WORKERS }}
+          DOMINIA_SERVER: ${{ vars.DOMINIA_SERVER || 'dominia-8fm9.onrender.com' }}
+          DOMINIA_SERVER_WORKERS: ${{ vars.DOMINIA_SERVER_WORKERS || '1' }}
       - run: npx cap sync android
       # The runner image ships JDK 21 (what Capacitor 8 needs) and the
       # Android SDK; this only selects that JDK.
