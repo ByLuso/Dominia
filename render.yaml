@@ -1,0 +1,30 @@
+# Dominia's game server on Render's free plan (README, "Running a Dominia
+# server"). Render builds the Dockerfile on every push to main, so the server
+# always runs the commit the Android workflow builds the APK from.
+services:
+  - type: web
+    name: dominia
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "80"
+      - key: GAME_ENV
+        value: prod
+      - key: SELF_HOSTED
+        value: "true"
+      # One worker fits the free plan's 512 MB; set the repository variable
+      # DOMINIA_SERVER_WORKERS to the same number.
+      - key: NUM_WORKERS
+        value: "1"
+      - key: INSTANCE_LETTER
+        value: a
+      # Required by the server, unused when self-hosted.
+      - key: TURNSTILE_SITE_KEY
+        value: none
+      - key: API_KEY
+        value: none
+      - key: ADMIN_BOT_API_KEY
+        value: none

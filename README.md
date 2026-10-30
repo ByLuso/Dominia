@@ -57,6 +57,20 @@ schedules no public lobbies. `NUM_WORKERS` must match the app's
 `DOMINIA_SERVER_WORKERS` (default 2). The server also serves the web
 version, so friends without the app can join from a browser.
 
+#### Free hosting on Render
+
+`render.yaml` deploys the server on Render's free plan (512 MB, one worker;
+a two-player game peaks around 280 MB). It sleeps after 15 minutes without
+traffic and takes about a minute to wake up. On Render, the start script
+takes the public hostname and the commit from `RENDER_EXTERNAL_HOSTNAME`
+and `RENDER_GIT_COMMIT`, and every push to main redeploys it, so it stays on
+the commit the Android workflow builds.
+
+1. On Render, create a Blueprint from this repository.
+2. Once deployed, set the repository variables `DOMINIA_SERVER` to the
+   service's hostname (`<name>.onrender.com`) and `DOMINIA_SERVER_WORKERS`
+   to `1`, then run the Android workflow.
+
 The rest of this README is OpenFront's own.
 
 ---

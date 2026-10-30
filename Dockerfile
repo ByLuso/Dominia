@@ -102,6 +102,18 @@ ENV GIT_COMMIT="$GIT_COMMIT"
 
 RUN <<'EOF' tee /usr/local/bin/start.sh
 #!/bin/sh
+# On Render (render.yaml) the public hostname and the deployed commit are only
+# known at runtime; default the server's identity to them.
+if [ -n "$RENDER_EXTERNAL_HOSTNAME" ]; then
+    : "${DOMAIN:=$RENDER_EXTERNAL_HOSTNAME}"
+    : "${GAME_HOST:=$RENDER_EXTERNAL_HOSTNAME}"
+    : "${SITE_HOST:=$RENDER_EXTERNAL_HOSTNAME}"
+    export DOMAIN GAME_HOST SITE_HOST
+fi
+if [ -n "$RENDER_GIT_COMMIT" ]; then
+    export GIT_COMMIT="$RENDER_GIT_COMMIT"
+fi
+
 # Generate the create-game nginx upstream from NUM_WORKERS before nginx starts.
 /usr/local/bin/generate-nginx-upstream.sh
 
