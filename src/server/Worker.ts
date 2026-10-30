@@ -303,21 +303,25 @@ export async function startWorker() {
   const lobbyService = new WorkerLobbyService(server, wss, gm, log);
   const singleplayerPresence = new SingleplayerPresence();
 
-  setTimeout(
-    () => {
-      // The ranked loop follows the deployment-active flag the master pushes
-      // to this worker (OPE-469): a draining, standby or fenced server keeps
-      // the games it has but stops offering new matches.
-      startRankedCheckinLoops({
-        gm,
-        playlist,
-        workerId,
-        log,
-        isActive: () => lobbyService.isDeploymentActive(),
-      });
-    },
-    1000 + Math.random() * 2000,
-  );
+  // Ranked matchmaking and the cosmetics/clan-tag privileges both come from
+  // the OpenFront API, which a self-hosted server does not have.
+  if (!ServerEnv.selfHosted()) {
+    setTimeout(
+      () => {
+        // The ranked loop follows the deployment-active flag the master pushes
+        // to this worker (OPE-469): a draining, standby or fenced server keeps
+        // the games it has but stops offering new matches.
+        startRankedCheckinLoops({
+          gm,
+          playlist,
+          workerId,
+          log,
+          isActive: () => lobbyService.isDeploymentActive(),
+        });
+      },
+      1000 + Math.random() * 2000,
+    );
+  }
 
   if (ServerEnv.otelEnabled()) {
     initWorkerMetrics(gm, lobbyService, singleplayerPresence);
@@ -329,7 +333,11 @@ export async function startWorker() {
     ServerEnv.jwtIssuer() + "/reserved_clan_tags",
     log,
   );
-  void privilegeRefresher.start();
+  // Never loaded when self-hosted, so get() keeps the fail-open checker:
+  // there is no shop, so no cosmetics to gate.
+  if (!ServerEnv.selfHosted()) {
+    void privilegeRefresher.start();
+  }
 
   // Ahead of everything that can reject a request — the worker-prefix check
   // below and the rate limiter further down — so that a 404 or a 429 still
@@ -730,7 +738,9 @@ export async function startWorker() {
           persistentId,
           isReadmit,
         );
-        if (ServerEnv.env() !== GameEnv.Dev) {
+        // Self-hosted has no join_verify API: joins keep the local name
+        // screen above, as in Dev.
+        if (ServerEnv.env() !== GameEnv.Dev && !ServerEnv.selfHosted()) {
           const stored = game?.storedIdentity(persistentId) ?? null;
           const steamAuthed = isSteamAuthenticated(claims);
           // SECURITY: the reject/skip/verify split (first joins must

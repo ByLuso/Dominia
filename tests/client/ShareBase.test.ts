@@ -27,6 +27,31 @@ const forbidden = () => {
 };
 
 describe("deriveShareOrigin", () => {
+  describe("Android app: https://localhost is not shareable", () => {
+    it("points links at the site host instead", () => {
+      expect(
+        deriveShareOrigin(
+          bootstrap("https://play.dominia.example"),
+          "https:",
+          "https://localhost",
+          true,
+        ),
+      ).toBe("https://play.dominia.example");
+    });
+
+    it("hangs hash links off the site root, not the app's page path", () => {
+      expect(
+        deriveShareBase(
+          bootstrap("https://play.dominia.example"),
+          "https:",
+          "https://localhost",
+          "/index.html",
+          true,
+        ),
+      ).toBe("https://play.dominia.example/");
+    });
+  });
+
   describe("web build: the document's own origin is shareable", () => {
     it("uses the document origin on https", () => {
       expect(

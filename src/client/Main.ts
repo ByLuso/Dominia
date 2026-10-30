@@ -2293,6 +2293,8 @@ class Client {
   ): Promise<string | null> {
     if (
       ClientEnv.env() === GameEnv.Dev ||
+      // Dominia's server does not verify Turnstile (SELF_HOSTED).
+      !ONLINE_FEATURES ||
       isDesktopShell() ||
       // Single-player and replays: no server to verify a token against (and
       // on the CDN replay shells Turnstile cannot load at all). Shared with

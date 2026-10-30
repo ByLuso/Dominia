@@ -120,6 +120,15 @@ export class ClientEnv {
     return v.numWorkers !== undefined;
   }
 
+  /**
+   * Whether this page has a game server to play on: true on a page a game
+   * server rendered and in an app built against one (scripts/build-app.ts),
+   * false in the solo-only app.
+   */
+  static hasGameServer(): boolean {
+    return ClientEnv.ownServerKnown();
+  }
+
   private static requireOwnServer(what: string): void {
     if (ClientEnv.ownServerKnown()) return;
     throw new NoServerError(`no ${what} base: no server list, none injected`);
@@ -471,6 +480,7 @@ export class ClientEnv {
       shareBootstrap,
       window.location.protocol,
       window.location.origin,
+      isNativeApp(),
     );
   }
   static shareBase(): string {
@@ -479,6 +489,7 @@ export class ClientEnv {
       window.location.protocol,
       window.location.origin,
       window.location.pathname,
+      isNativeApp(),
     );
   }
 }
@@ -597,6 +608,23 @@ function isWebScheme(locationProtocol: string): boolean {
 }
 
 /**
+ * Whether the page's own address is one a recipient can open. The Android
+ * app's page is https://localhost (Capacitor), a web scheme that is no more
+ * shareable than the desktop shell's app:// one.
+ */
+function isSharedPage(locationProtocol: string, nativeApp: boolean): boolean {
+  return isWebScheme(locationProtocol) && !nativeApp;
+}
+
+/** Whether this page runs inside the Dominia Android app (Capacitor's bridge). */
+function isNativeApp(): boolean {
+  const capacitor = (
+    window as { Capacitor?: { isNativePlatform?: () => boolean } }
+  ).Capacitor;
+  return capacitor?.isNativePlatform?.() === true;
+}
+
+/**
  * Where a link meant to LEAVE this client should point.
  *
  * On the web that is the document's own origin: the page the copier is looking
@@ -625,8 +653,9 @@ export function deriveShareOrigin(
   bootstrap: () => { siteOrigin?: string; jwtAudience: string },
   locationProtocol: string,
   locationOrigin: string,
+  nativeApp = false,
 ): string {
-  if (isWebScheme(locationProtocol)) return locationOrigin;
+  if (isSharedPage(locationProtocol, nativeApp)) return locationOrigin;
   const { siteOrigin, jwtAudience } = bootstrap();
   if (siteOrigin) return siteOrigin;
   return jwtAudience === "localhost"
@@ -647,9 +676,15 @@ export function deriveShareBase(
   locationProtocol: string,
   locationOrigin: string,
   locationPathname: string,
+  nativeApp = false,
 ): string {
-  const origin = deriveShareOrigin(bootstrap, locationProtocol, locationOrigin);
-  return isWebScheme(locationProtocol)
+  const origin = deriveShareOrigin(
+    bootstrap,
+    locationProtocol,
+    locationOrigin,
+    nativeApp,
+  );
+  return isSharedPage(locationProtocol, nativeApp)
     ? `${origin}${locationPathname}`
     : `${origin}/`;
 }

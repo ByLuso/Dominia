@@ -27,6 +27,8 @@ export interface TribePoolPlayer {
 export async function fetchCustomTribes(
   players: TribePoolPlayer[],
 ): Promise<Tribe[]> {
+  // Tribe names are sold through OpenFront's API; self-hosted has none.
+  if (ServerEnv.selfHosted()) return [];
   const response = await fetch(`${ServerEnv.jwtIssuer()}/custom_tribes`, {
     method: "POST",
     signal: AbortSignal.timeout(1500),

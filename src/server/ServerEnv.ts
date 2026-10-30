@@ -109,6 +109,14 @@ export class ServerEnv {
   static cdnBase(): string {
     return process.env.CDN_BASE ?? "";
   }
+  /**
+   * Dominia's own deployment (SELF_HOSTED=true): no OpenFront API behind it.
+   * Players are guests identified by their persistent ID, nothing is
+   * archived, and only private lobbies exist.
+   */
+  static selfHosted(): boolean {
+    return process.env.SELF_HOSTED === "true";
+  }
   static jwtIssuer(): string {
     const audience = ServerEnv.jwtAudience();
     return audience === "localhost"

@@ -29,10 +29,11 @@ import {
   translateText,
 } from "../client/Utils";
 import { createLobby, getUserMe, queueLobby, setLobbyListed } from "./Api";
-import "./components/baseComponents/Modal";
 import { BaseModal } from "./components/BaseModal";
-import "./components/ConfirmDialog";
+import "./components/baseComponents/Modal";
 import { CopyButton } from "./components/CopyButton";
+import "./components/ConfirmDialog";
+import { ONLINE_FEATURES } from "./Features";
 import "./components/GameConfigSettings";
 import "./components/InputCard";
 import "./components/InsufficientCurrencyDialog";
@@ -274,7 +275,10 @@ export class HostLobbyModal extends BaseModal {
         >
           ${translateText("host_modal.title")}
         </span>
-        ${this.renderVisibilityToggle()}
+        ${
+          // Listing publicly needs the OpenFront API's subscription check.
+          ONLINE_FEATURES ? this.renderVisibilityToggle() : nothing
+        }
       `,
       onBack: () => {
         this.leaveLobbyOnClose = true;

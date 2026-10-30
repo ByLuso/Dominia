@@ -430,6 +430,8 @@ export class MasterLobbyService {
   }
 
   private async maybeScheduleLobby() {
+    // Self-hosted Dominia has private lobbies only.
+    if (ServerEnv.selfHosted()) return;
     // Coordinated: the site's queue depth and countdowns are the
     // coordinator's; adding our own here would double-schedule.
     if (this.isCoordinated()) return;

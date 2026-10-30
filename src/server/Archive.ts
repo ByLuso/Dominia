@@ -32,6 +32,8 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const withJitter = (ms: number) => ms + Math.floor(Math.random() * ms * 0.25);
 
 export async function archive(gameRecord: GameRecord) {
+  // The archive store is OpenFront's API; a self-hosted server keeps none.
+  if (ServerEnv.selfHosted()) return;
   let gameID: GameID | undefined;
   let request: RequestInit;
   let url: string;

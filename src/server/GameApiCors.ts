@@ -8,8 +8,15 @@ import { ServerEnv } from "./ServerEnv";
  */
 export const DESKTOP_APP_ORIGIN = "app://openfront";
 
+/**
+ * Origin the Dominia Android app runs from: Capacitor serves the bundled page
+ * as https://localhost (capacitor.config.ts).
+ */
+export const MOBILE_APP_ORIGIN = "https://localhost";
+
 function isAllowedOrigin(origin: string): boolean {
   if (origin === DESKTOP_APP_ORIGIN) return true;
+  if (ServerEnv.selfHosted() && origin === MOBILE_APP_ORIGIN) return true;
   const siteHost = ServerEnv.siteHost();
   if (siteHost !== undefined && origin === `https://${siteHost}`) return true;
 

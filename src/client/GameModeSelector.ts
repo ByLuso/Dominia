@@ -713,7 +713,13 @@ export class GameModeSelector extends LitElement {
               : nothing
           }
         </div>
-        ${ONLINE_FEATURES ? this.renderMultiplayerActions() : nothing}
+        ${
+          ONLINE_FEATURES
+            ? this.renderMultiplayerActions()
+            : ClientEnv.hasGameServer()
+              ? this.renderPrivateLobbyActions()
+              : nothing
+        }
         ${heroSlot ? this.renderHeroSlot(ffa) : nothing}
         ${
           ONLINE_FEATURES
@@ -764,6 +770,33 @@ export class GameModeSelector extends LitElement {
                 small: true,
               })
             : nothing,
+        )}
+        ${this.renderSmallActionCard(
+          translateText("main.join"),
+          this.openJoinLobby,
+          SECONDARY_ACTION,
+          this.hostedLobbyCount(),
+          true,
+        )}
+      </div>
+    `;
+  }
+
+  /**
+   * Create / Join for a Dominia server: private lobbies only, so no Ranked
+   * (it needs the OpenFront API's matchmaking).
+   */
+  private renderPrivateLobbyActions() {
+    return html`
+      <div
+        class="grid grid-cols-2 gap-4 sm:compact:gap-3 h-14 sm:col-span-2 sm:row-start-4"
+      >
+        ${this.renderSmallActionCard(
+          translateText("main.create"),
+          this.openHostLobby,
+          SECONDARY_ACTION,
+          undefined,
+          true,
         )}
         ${this.renderSmallActionCard(
           translateText("main.join"),

@@ -136,7 +136,8 @@ export async function startMaster() {
 
   // A server that registers schedules nothing until the API calls it open: a
   // mistyped letter must not mint lobbies under a letter routed elsewhere.
-  const registers = checkinBody(0) !== null;
+  // A self-hosted server has no API to register with, even with a public host.
+  const registers = !ServerEnv.selfHosted() && checkinBody(0) !== null;
   lobbyService = new MasterLobbyService(playlist, log, registers);
 
   const INSTANCE_ID =
@@ -155,7 +156,7 @@ export async function startMaster() {
   // own lobbies exactly as it does without a coordinator.
   const hello = checkinBody(0);
   const coordinator = coordinatorUrl(registeredSite());
-  if (coordinator !== null && hello !== null) {
+  if (registers && coordinator !== null && hello !== null) {
     log.info(`Joining lobby coordinator at ${coordinator}`);
     const client = new LobbyCoordinatorClient({
       url: coordinator,

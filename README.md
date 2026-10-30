@@ -10,15 +10,52 @@ Dominia is a mobile-first territorial strategy game based on
 [OpenFront](https://github.com/openfrontio/OpenFrontIO). It is not affiliated
 with or endorsed by OpenFront.
 
-Version 0.1 is solo play against bots, packaged as an Android app:
+Solo play against bots works offline. Multiplayer is private lobbies on
+Dominia's own server: a host creates a lobby and shares its code or link.
 
-- Multiplayer, accounts, the shop and news depend on OpenFront's closed-source
-  API, so they are turned off (`ONLINE_FEATURES` in `src/client/Features.ts`).
+- Multiplayer through OpenFront's closed-source API (public lobbies, ranked,
+  accounts, the shop, news) is turned off (`ONLINE_FEATURES` in
+  `src/client/Features.ts`).
 - OpenFront's proprietary assets (`proprietary/`), ads and analytics are
   removed. Music is not included yet.
-- `npm run build-app` builds the app bundle into `app-www/`; the Android
-  workflow (`.github/workflows/android.yml`) wraps it with Capacitor and
-  publishes a debug APK as a build artifact.
+
+### Android app
+
+`npm run build-app` builds the app bundle into `app-www/`; the Android
+workflow (`.github/workflows/android.yml`) wraps it with Capacitor and
+publishes a debug APK as a build artifact.
+
+Set the repository variable `DOMINIA_SERVER` (for example
+`play.example.com`) to build an app with Create/Join lobby against that
+server; leave it unset for a solo-only app. A server only admits clients
+built from its own commit, so deploy the server from the commit the APK was
+built from.
+
+### Running a Dominia server
+
+Build the image from the commit the app was built from:
+
+```sh
+docker build --build-arg GIT_COMMIT=$(git rev-parse HEAD) -t dominia-server .
+```
+
+Run it behind HTTPS (the app connects with `wss://`), with `<host>` the
+public hostname:
+
+```sh
+docker run -p 80:80 \
+  -e GAME_ENV=prod -e SELF_HOSTED=true \
+  -e DOMAIN=<host> -e GAME_HOST=<host> -e SITE_HOST=<host> \
+  -e NUM_WORKERS=2 -e INSTANCE_LETTER=a \
+  -e TURNSTILE_SITE_KEY=none -e API_KEY=none -e ADMIN_BOT_API_KEY=none \
+  dominia-server
+```
+
+`SELF_HOSTED=true` admits guests by their persistent ID, skips every
+OpenFront API call (Turnstile, archives, ranked, cosmetics, check-in) and
+schedules no public lobbies. `NUM_WORKERS` must match the app's
+`DOMINIA_SERVER_WORKERS` (default 2). The server also serves the web
+version, so friends without the app can join from a browser.
 
 The rest of this README is OpenFront's own.
 

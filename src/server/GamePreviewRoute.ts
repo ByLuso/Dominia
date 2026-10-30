@@ -49,6 +49,8 @@ export function registerGamePreviewRoute(opts: {
     gameID: string,
   ): Promise<ExternalGameInfo | null> => {
     if (!gameIDSchema.safeParse(gameID).success) return null;
+    // Finished games live in OpenFront's API, which self-hosted lacks.
+    if (ServerEnv.selfHosted()) return null;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1500);
