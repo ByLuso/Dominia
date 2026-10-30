@@ -265,6 +265,7 @@ export class LangSelector extends LitElement {
       "settings-modal",
       "username-input",
       "game-mode-selector",
+      "ios-add-to-home-screen-banner",
       "graphics-preset-selector",
       "user-setting",
       "o-modal",
