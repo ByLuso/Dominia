@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dominia</string>
+    <string name="title_activity_main">Dominia</string>
+    <string name="package_name">io.github.byluso.dominia</string>
+    <string name="custom_url_scheme">io.github.byluso.dominia</string>
+</resources>

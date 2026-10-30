@@ -60,8 +60,8 @@ export class DesktopNavBar extends LitElement {
           <div class="h-8">
             <img
               class="block h-full aspect-[1364/259]"
-              src=${assetUrl("images/OpenFrontLogo.svg")}
-              alt="OpenFront"
+              src=${assetUrl("images/DominiaLogo.svg")}
+              alt="Dominia"
             />
           </div>
           <div
@@ -77,7 +77,7 @@ export class DesktopNavBar extends LitElement {
           data-i18n="main.play"
         ></button>
         <!-- Desktop Navigation Menu Items -->
-        <div class="relative no-game-portal">
+        <div class="online-only relative no-game-portal">
           <button
             class="nav-menu-item ${
               currentPage === "page-item-store" ? "active" : ""
@@ -100,19 +100,19 @@ export class DesktopNavBar extends LitElement {
           }
         </div>
         <button
-          class="nav-menu-item ${
+          class="online-only nav-menu-item ${
             currentPage === "page-inventory" ? "active" : ""
           } text-white/70 hover:text-malibu-blue font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue"
           data-page="page-inventory"
           data-i18n="main.inventory"
         ></button>
         <button
-          class="nav-menu-item text-white/70 hover:text-malibu-blue  font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue "
+          class="online-only nav-menu-item text-white/70 hover:text-malibu-blue  font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue "
           data-page="page-leaderboard"
           data-i18n="main.leaderboard"
         ></button>
         <button
-          class="no-game-portal nav-menu-item text-white/70 hover:text-blue-500 font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-blue-500"
+          class="online-only no-game-portal nav-menu-item text-white/70 hover:text-blue-500 font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-blue-500"
           data-page="page-clan"
           data-i18n="main.clans"
         ></button>
@@ -122,7 +122,10 @@ export class DesktopNavBar extends LitElement {
              item list. -->
         <div class="flex items-center gap-1 pl-5 ml-1 border-l border-white/10">
           <nav-utility-icons size="desktop"></nav-utility-icons>
-          <nav-account-menu variant="desktop"></nav-account-menu>
+          <nav-account-menu
+            class="online-only"
+            variant="desktop"
+          ></nav-account-menu>
         </div>
       </nav>
     `;

@@ -1,10 +1,28 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="proprietary/images/OpenFrontLogoDark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="proprietary/images/OpenFrontLogo.svg">
-    <img src="proprietary/images/OpenFrontLogo.svg" alt="OpenFrontIO Logo" width="300">
-  </picture>
+  <img src="resources/images/DominiaLockup.svg" alt="Dominia" width="420">
 </p>
+
+# Dominia
+
+**Expande. Alíate. Domina.**
+
+Dominia is a mobile-first territorial strategy game based on
+[OpenFront](https://github.com/openfrontio/OpenFrontIO). It is not affiliated
+with or endorsed by OpenFront.
+
+Version 0.1 is solo play against bots, packaged as an Android app:
+
+- Multiplayer, accounts, the shop and news depend on OpenFront's closed-source
+  API, so they are turned off (`ONLINE_FEATURES` in `src/client/Features.ts`).
+- OpenFront's proprietary assets (`proprietary/`), ads and analytics are
+  removed. Music is not included yet.
+- `npm run build-app` builds the app bundle into `app-www/`; the Android
+  workflow (`.github/workflows/android.yml`) wraps it with Capacitor and
+  publishes a debug APK as a build artifact.
+
+The rest of this README is OpenFront's own.
+
+---
 
 [OpenFront.io](https://openfront.io/) is an online real-time strategy game focused on territorial control and alliance building. Players compete to expand their territory, build structures, and form strategic alliances in various maps based on real-world geography.
 

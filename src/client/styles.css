@@ -19,7 +19,7 @@
 @theme {
   --default-ring-width: 3px;
   --default-ring-color: var(--color-malibu-blue);
-  --font-display: "OpenFront", Inter, Arial, sans-serif;
+  --font-display: "Dominia", Inter, Arial, sans-serif;
 
   /* Openfront.io brand palette — see Openfront_Brand_Guidelines.pdf §4 */
   --color-malibu-blue: #0084d1;
@@ -200,6 +200,11 @@ body.page-open {
 /* Main adds .game-portal to <html> on CrazyGames and Poki. A rule rather than
    a one-off sweep, so it also hides elements that render later (lazy modals). */
 .game-portal .no-game-portal {
+  display: none !important;
+}
+
+/* Main adds .solo-only to <html> while ONLINE_FEATURES (Features.ts) is off. */
+.solo-only .online-only {
   display: none !important;
 }
 

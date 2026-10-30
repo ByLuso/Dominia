@@ -113,7 +113,7 @@ export class NavUtilityIcons extends LitElement {
     const currentPage = window.currentPageId;
     return html`
       <div class="flex items-center gap-1">
-        <div class="relative">
+        <div class="online-only relative">
           <button
             class="${this.buttonClass()} ${
               currentPage === "page-news" ? "active" : ""

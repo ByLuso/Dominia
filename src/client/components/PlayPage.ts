@@ -59,8 +59,8 @@ export class PlayPage extends LitElement {
               class="col-start-2 flex items-center justify-center text-malibu-blue min-w-0"
             >
               <img
-                src=${assetUrl("images/OpenFrontLogo.svg")}
-                alt="OpenFront"
+                src=${assetUrl("images/DominiaLogo.svg")}
+                alt="Dominia"
                 class="h-full w-auto"
               />
             </div>
@@ -72,7 +72,10 @@ export class PlayPage extends LitElement {
               class="col-start-3 justify-self-end shrink-0 flex items-center gap-0.5"
             >
               <nav-utility-icons size="mobile"></nav-utility-icons>
-              <nav-account-menu variant="mobile"></nav-account-menu>
+              <nav-account-menu
+                class="online-only"
+                variant="mobile"
+              ></nav-account-menu>
             </div>
           </div>
         </div>
@@ -91,7 +94,7 @@ export class PlayPage extends LitElement {
           <!-- Left column: news banner + identity row, stacked tight. -->
           <div class="flex flex-col gap-2 min-w-0">
             <!-- Off on compact screens (see styles.css), like Streaming Now. -->
-            <news-box class="compact:hidden"></news-box>
+            <news-box class="online-only compact:hidden"></news-box>
 
             <!-- Identity row: username over the currently selected cosmetic background. -->
             <div
@@ -114,7 +117,7 @@ export class PlayPage extends LitElement {
           <!-- Right column: Streaming Now (desktop only), stretched to the left column's
                full height so the top strip has no dead space. -->
           <streaming-now
-            class="hidden lg:flex lg:h-full lg:flex-col w-full min-w-0"
+            class="online-only hidden lg:flex lg:h-full lg:flex-col w-full min-w-0"
           ></streaming-now>
         </div>
 
@@ -123,7 +126,7 @@ export class PlayPage extends LitElement {
         <!-- Desktop gets the compact footer button instead. -->
         <steam-wishlist
           campaign="home_mobile"
-          class="block px-2 pb-4 lg:hidden"
+          class="online-only block px-2 pb-4 lg:hidden"
         ></steam-wishlist>
       </div>
     `;

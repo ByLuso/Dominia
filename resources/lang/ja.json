@@ -609,7 +609,7 @@
     "retry": "再試行",
     "starting_link": "アカウントを連携しています…",
     "ticket_unavailable": "現在、アカウントを連携できません。もう一度お試しいただくか、そのままゲームを続けてください。",
-    "title": "OpenFront ー アカウント設定"
+    "title": "Dominia ー アカウント設定"
   },
   "desktop_presence": {
     "in_game": "ゲーム中",
@@ -1148,7 +1148,7 @@
     "ui_wilderness": "荒野",
     "ui_your_team": "あなたのチーム :",
     "video_tutorial": "チュートリアル動画",
-    "video_tutorial_title": "OpenFront.io チュートリアル"
+    "video_tutorial_title": "Dominia チュートリアル"
   },
   "host_modal": {
     "anonymous_players": "匿名のプレイヤー",
@@ -1338,11 +1338,10 @@
     "solo": "ソロ",
     "store": "ストア",
     "terms_of_service": "利用規約",
-    "title": "OpenFront (ALPHA)",
+    "title": "Dominia",
     "troubleshooting": "トラブルシューティング",
     "tutorial": "チュートリアル",
-    "user_avatar_alt": "{username}のアバター",
-    "wiki": "Wiki"
+    "user_avatar_alt": "{username}のアバター"
   },
   "map": {
     "achiran": "アチラン",
@@ -1584,7 +1583,7 @@
   },
   "news_box": {
     "dismiss": "無視",
-    "firefox_warning": "OpenFront.ioは[Firefoxベースのブラウザ](https://simple.wikipedia.org/wiki/Web_browsers_based_on_Firefox)でうまく動作しません。良いパフォーマンスのために[Chromiumベースのブラウザ](https://en.wikipedia.org/wiki/Chromium_(web_browser)#Browsers_based_on_Chromium)を使用するのをおすすめします。",
+    "firefox_warning": "Dominia.ioは[Firefoxベースのブラウザ](https://simple.wikipedia.org/wiki/Web_browsers_based_on_Firefox)でうまく動作しません。良いパフォーマンスのために[Chromiumベースのブラウザ](https://en.wikipedia.org/wiki/Chromium_(web_browser)#Browsers_based_on_Chromium)を使用するのをおすすめします。",
     "go_to_item": "{num}番目のアイテムに移動",
     "news": "お知らせ",
     "tournament": "トーナメント",
@@ -1941,7 +1940,7 @@
     "reason_offer_unavailable": "この確認画面の有効期限が切れています。もう一度連携を開始してください。",
     "reason_rate_limited": "試行回数が多すぎます。{seconds, plural, =0 {少し} other {#秒}}待ってからもう一度お試しください。",
     "reason_steam_has_progress": "このSteamアカウントにはすでに独自のゲーム進行状況があるため、統合できません。",
-    "reason_steam_linked_elsewhere": "この Steam アカウントは既に別の OpenFront アカウントにリンクされています。",
+    "reason_steam_linked_elsewhere": "この Steam アカウントは既に別の Dominia アカウントにリンクされています。",
     "success": "あなたのSteamアカウントがリンクされました。",
     "title": "Steamアカウントと連携する"
   },
@@ -2432,7 +2431,7 @@
     "other_won": "{player}の勝利！",
     "requeue": "もう一度プレイする",
     "spectate": "観戦する",
-    "support_openfront": "OpenFront を支援！",
+    "support_openfront": "Dominia を支援！",
     "territory_pattern": "領土スキンを手に入れて広告をなしにしよう！",
     "you_won": "勝利！",
     "your_team": "あなたのチームの勝利！",

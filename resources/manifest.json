@@ -17,9 +17,11 @@
   "display_override": ["fullscreen", "minimal-ui"],
   "display": "standalone",
   "dir": "auto",
-  "lang": "en",
-  "name": "OpenFront.io",
-  "short_name": "OpenFront",
+  "lang": "es",
+  "name": "Dominia",
+  "short_name": "Dominia",
   "start_url": "/",
-  "id": "/"
+  "id": "/",
+  "background_color": "#0E1A2E",
+  "theme_color": "#0E1A2E"
 }

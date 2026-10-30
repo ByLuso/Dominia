@@ -9,6 +9,7 @@ import {
 import { ServerList } from "@openfront/shared/ServerList";
 import { JWK } from "jose";
 import { z } from "zod";
+import { ONLINE_FEATURES } from "./Features";
 
 /**
  * No server is known: the API's list has not loaded (or carries none for
@@ -245,6 +246,8 @@ export class ClientEnv {
     return ClientEnv.get().gitCommit;
   }
   static jwtIssuer(): string {
+    // Same unresolvable host as getApiBase (ApiBase imports this module).
+    if (!ONLINE_FEATURES) return "https://api.invalid";
     const audience = ClientEnv.jwtAudience();
     return audience === "localhost"
       ? "http://localhost:8787"

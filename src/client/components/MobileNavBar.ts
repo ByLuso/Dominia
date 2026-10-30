@@ -86,8 +86,8 @@ export class MobileNavBar extends LitElement {
         >
           <div class="flex flex-col items-center gap-1">
             <img
-              src=${assetUrl("images/OpenFrontLogo.svg")}
-              alt="OpenFront"
+              src=${assetUrl("images/DominiaLogo.svg")}
+              alt="Dominia"
               class="w-auto h-auto max-w-[220px] max-h-[4.5rem]"
             />
             <div
@@ -103,7 +103,7 @@ export class MobileNavBar extends LitElement {
           data-i18n="main.play"
         ></button>
         <div
-          class="no-game-portal nav-menu-item flex items-center w-full cursor-pointer"
+          class="online-only no-game-portal nav-menu-item flex items-center w-full cursor-pointer"
           data-page="page-item-store"
           @click=${this._notifications.onStoreClick}
         >
@@ -115,19 +115,19 @@ export class MobileNavBar extends LitElement {
           }
         </div>
         <button
-          class="${MOBILE_ITEM} ${
+          class="online-only ${MOBILE_ITEM} ${
             currentPage === "page-inventory" ? "active" : ""
           }"
           data-page="page-inventory"
           data-i18n="main.inventory"
         ></button>
         <button
-          class="${MOBILE_ITEM}"
+          class="online-only ${MOBILE_ITEM}"
           data-page="page-leaderboard"
           data-i18n="main.leaderboard"
         ></button>
         <button
-          class="no-game-portal ${MOBILE_ITEM}"
+          class="online-only no-game-portal ${MOBILE_ITEM}"
           data-page="page-clan"
           data-i18n="main.clans"
         ></button>

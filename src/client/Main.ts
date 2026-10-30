@@ -18,8 +18,6 @@ import {
 import { ClientEnv } from "src/client/ClientEnv";
 import { renderNavVersion } from "src/client/GameVersion";
 import { responseHasLinkedIdentity } from "./AccountIdentity";
-import { adGatekeeper } from "./AdGatekeeper";
-import { loadAdmiral, onAdmiralMeasured } from "./Admiral";
 import {
   getUserMe,
   invalidateUserMe,
@@ -65,6 +63,7 @@ import {
   isDesktopShell,
   type DesktopUpdateState,
 } from "./DesktopShell";
+import { ONLINE_FEATURES } from "./Features";
 import "./FeaturedStream";
 import {
   claimGameClientReload,
@@ -548,8 +547,9 @@ class Client {
     // network, so it overlaps with the rest of boot: by the time a player
     // can click Join or Create the list is already known and the click
     // never waits on a fetch (docs/MultiServer.md, "Server list v2"). It
-    // never throws and keeps itself alive with a heartbeat afterwards.
-    startServerListPolling();
+    // never throws and keeps itself alive with a heartbeat afterwards. A
+    // solo-only build (Features.ts) has no servers to list.
+    if (ONLINE_FEATURES) startServerListPolling();
 
     // Prefetch turnstile token so it is available when the user joins a lobby.
     // Desktop (Steam) has no Turnstile script and is server-side exempt, so
@@ -558,8 +558,12 @@ class Client {
     // the replay host may not be on the Turnstile site key's domain allowlist,
     // so rendering the widget there just fails — and replays never
     // send a token anyway (see getTurnstileToken below).
+    // A solo-only build (Features.ts) never loads Turnstile: solo games are
+    // exempt from it.
     const turnstilePrefetch =
-      isDesktopShell() || isReplayShellHost(window.location.hostname)
+      !ONLINE_FEATURES ||
+      isDesktopShell() ||
+      isReplayShellHost(window.location.hostname)
         ? null
         : getTurnstileToken();
     // A prefetch that fails is not an error anyone has asked about yet: the
@@ -573,12 +577,12 @@ class Client {
     await customElements.whenDefined("mobile-nav-bar");
     await customElements.whenDefined("desktop-nav-bar");
 
-    const openFrontFont = new FontFace(
-      "OpenFront",
-      `url(${assetUrl("fonts/OpenFront.ttf")})`,
+    const displayFont = new FontFace(
+      "Dominia",
+      `url(${assetUrl("fonts/Dominia.ttf")})`,
     );
-    document.fonts.add(openFrontFont);
-    openFrontFont.load().catch(() => {});
+    document.fonts.add(displayFont);
+    displayFont.load().catch(() => {});
 
     // The tagged version only, so a player's version reads the same across web
     // and Steam. The build's full identity -- the commit on an untagged build,
@@ -818,29 +822,12 @@ class Client {
       } else {
         updateAccountNavButton(userMeResponse);
       }
-      const isAdFree =
-        userMeResponse !== false && userMeResponse.player?.adfree === true;
-      window.adsEnabled =
-        !isAdFree && !gamePortal.isOnGamePortal() && !isDesktopShell();
+      // Dominia carries no ads: every ad integration in this codebase is
+      // wired to OpenFront's own ad accounts.
+      window.adsEnabled = false;
       syncHashedEmail(userMeResponse, window.adsEnabled).catch((e) =>
         console.warn("Hashed email sync failed", e),
       );
-      // Ad-eligible users only: paid/adfree users must never load Admiral (its
-      // adblock popup fires autonomously once the payload runs). Start watching
-      // adblock state; once a blocker is ever detected the in-game ad is
-      // suppressed forever (persisted) — those users are highly ad-sensitive.
-      if (window.adsEnabled) {
-        loadAdmiral();
-        // Admiral's read is more reliable than our DOM bait, so use it as a
-        // fast initial signal. A blocker that whitelists this site still shows
-        // ads, so "blocked" means adblocking AND not whitelisted.
-        onAdmiralMeasured((res) => {
-          adGatekeeper.seed(
-            res.adblocking === true && res.whitelisted !== true,
-          );
-        });
-        adGatekeeper.start();
-      }
       // Before the dispatch: <username-input> reads this store when it picks
       // the lapse notice's wording, and the record has to be current by then.
       const grantStoreBefore = parseSteamGrantStore(
@@ -2357,6 +2344,11 @@ const bootstrap = () => {
   initNavigation();
   prefetchGameClient();
   prefetchModals();
+
+  // Hides every .online-only element in a solo-only build (styles.css).
+  if (!ONLINE_FEATURES) {
+    document.documentElement.classList.add("solo-only");
+  }
 
   // Hides every .no-game-portal element on CrazyGames and Poki (styles.css).
   if (gamePortal.isOnGamePortal()) {

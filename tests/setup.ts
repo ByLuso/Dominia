@@ -8,3 +8,8 @@ import "./domTeardown";
 // ServerEnv.gitCommit() throws when unset; the dev server sets GIT_COMMIT=DEV,
 // so tests exercising server code (e.g. the lobby feed) mirror that.
 process.env.GIT_COMMIT ??= "DEV";
+
+// The suites cover the online features, which Dominia's solo build turns off
+// (src/client/Features.ts); they run with the flag on so that code stays
+// tested. tests/client/SoloOnlyBuild.test.ts covers the flag off.
+vi.mock("../src/client/Features", () => ({ ONLINE_FEATURES: true }));

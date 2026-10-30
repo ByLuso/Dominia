@@ -9,7 +9,7 @@
     "close": "Sulje"
   },
   "main": {
-    "title": "OpenFront (ALPHA)",
+    "title": "Dominia",
     "join_discord": "Liity Discordiin!",
     "login_discord": "Kirjaudu sisään Discordilla",
     "checking_login": "Tarkistetaan sisäänkirjautumista...",
@@ -21,7 +21,6 @@
     "instructions": "Ohjeet",
     "how_to_play": "Kuinka pelata",
     "advertise": "Mainosta",
-    "wiki": "Wiki",
     "privacy_policy": "Tietosuojaseloste",
     "terms_of_service": "Käyttöehdot"
   },
@@ -618,8 +617,8 @@
       "cursor": "Kursori",
       "hand": "Käsi",
       "radiation": "Säteily",
-      "openfront_qr": "OpenFront.io:n QR-koodi",
-      "openfront": "OpenFront",
+      "openfront_qr": "Dominia:n QR-koodi",
+      "openfront": "Dominia",
       "t_rex": "T-Rex",
       "embelem": "Tunnus",
       "contributor": "Avustaja",

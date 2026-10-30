@@ -1,5 +1,6 @@
 import { GameMapType, GameType } from "@openfront/engine-api/game/GameTypes";
 import { UserMeResponse } from "@openfront/shared/ApiSchemas";
+import { assetUrl } from "@openfront/shared/AssetUrls";
 import { PublicGameInfo, PublicGames } from "@openfront/shared/WireSchemas";
 import { html, LitElement, nothing, type TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -23,6 +24,7 @@ import {
   type DesktopSessionState,
   type DesktopUpdateState,
 } from "./DesktopShell";
+import { ONLINE_FEATURES } from "./Features";
 import { gamePortal } from "./GamePortal";
 import type { HostLobbyModal } from "./HostLobbyModal";
 import { showInGameAlert } from "./InGameModal";
@@ -554,6 +556,7 @@ export class GameModeSelector extends LitElement {
   }
 
   private openLobbyFeed(refreshList = false) {
+    if (!ONLINE_FEATURES) return;
     this.feedWanted = true;
     this.feedGaveUp = false;
     if (lobbyFeedSuspended(this.desktopSessionState)) {
@@ -653,7 +656,8 @@ export class GameModeSelector extends LitElement {
     const special = this.lobbies?.games?.["special"]?.[0];
     // The hero slot holds the spinner, then the FFA card; loaded without one
     // it goes and the upcoming column takes the whole row.
-    const heroSlot = this.lobbies === null || ffa !== undefined;
+    const heroSlot =
+      ONLINE_FEATURES && (this.lobbies === null || ffa !== undefined);
     // A lone secondary card takes both of the column's card rows.
     const cardRows =
       teams && special
@@ -672,6 +676,15 @@ export class GameModeSelector extends LitElement {
       <div
         class="flex flex-col gap-4 sm:compact:gap-3 sm:compact:has-[>ios-add-to-home-screen-banner:empty]:-mt-3 w-full px-4 pb-4 mx-auto sm:px-0 sm:pb-0 sm:grid sm:grid-cols-[2fr_1fr] sm:grid-rows-[auto_min(24rem,40vh)_auto_auto] sm:compact:grid-rows-[auto_minmax(min(24rem,40vh),auto)_3.5rem_auto] desktop:sm:grid-rows-[auto_40vh_auto_auto] sm:[reading-flow:grid-rows]"
       >
+        ${
+          ONLINE_FEATURES
+            ? nothing
+            : html`<img
+                src=${assetUrl("images/DominiaLockup.svg")}
+                alt="Dominia"
+                class="w-full max-w-xl mx-auto my-6 sm:col-span-2 sm:row-start-2 sm:self-center"
+              />`
+        }
         <ios-add-to-home-screen-banner
           class="no-game-portal [&:empty]:hidden sm:col-span-2 sm:row-start-1"
         ></ios-add-to-home-screen-banner>
@@ -700,99 +713,13 @@ export class GameModeSelector extends LitElement {
               : nothing
           }
         </div>
-        <div
-          class="grid grid-cols-3 gap-4 sm:compact:gap-3 h-14 sm:col-span-2 sm:row-start-4"
-        >
-          ${this.renderSmallActionCard(
-            translateText("main.create"),
-            this.openHostLobby,
-            SECONDARY_ACTION,
-            undefined,
-            true,
-          )}
-          ${this.renderSmallActionCard(
-            translateText("mode_selector.ranked_title"),
-            this.openRankedMenu,
-            SECONDARY_ACTION,
-            undefined,
-            true,
-            // Ranked admits trusted accounts only. A trusted viewer gets the
-            // green open lock; anyone else meets the red locks and the trust
-            // popup inside the ranked modal. Small, so it clears the label on
-            // narrow (mobile) buttons.
-            this.viewerTrusted
-              ? trustLockIcon(true, {
-                  tooltipTitle: translateText(
-                    "mode_selector.ranked_trust_tooltip_title",
-                  ),
-                  position: "top-1 right-1",
-                  small: true,
-                })
-              : nothing,
-          )}
-          ${this.renderSmallActionCard(
-            translateText("main.join"),
-            this.openJoinLobby,
-            SECONDARY_ACTION,
-            this.hostedLobbyCount(),
-            true,
-          )}
-        </div>
-
+        ${ONLINE_FEATURES ? this.renderMultiplayerActions() : nothing}
+        ${heroSlot ? this.renderHeroSlot(ffa) : nothing}
         ${
-          heroSlot
-            ? html`<div class="min-w-0 sm:col-start-1 sm:row-start-2">
-                ${
-                  ffa
-                    ? this.renderLobbyCard(
-                        ffa,
-                        getGameModeLabel(ffa.gameConfig!),
-                      )
-                    : this.offlineForLobbies()
-                      ? this.renderLobbiesUnavailable()
-                      : html`<div
-                          class="flex items-center justify-center h-44 sm:h-full"
-                        >
-                          <span
-                            class="size-24 rounded-full border-[6px] border-blue-500/30 border-t-blue-500 animate-spin"
-                          ></span>
-                        </div>`
-                }
-              </div>`
+          ONLINE_FEATURES
+            ? this.renderLobbyColumn(heroSlot, teams, special, cardRows)
             : nothing
         }
-
-        <!-- Always rendered: the heading is the only way into the lobby browser. -->
-        <section
-          class="flex flex-col gap-4 sm:compact:gap-3 min-w-0 sm:grid sm:grid-rows-[auto_1fr_1fr] sm:row-start-2 sm:min-h-0 sm:[reading-flow:grid-rows] ${
-            heroSlot
-              ? "sm:col-start-2 sm:compact:row-end-4 sm:compact:grid-rows-[auto_minmax(7.5rem,1fr)_minmax(7.5rem,1fr)]"
-              : "sm:col-start-1 sm:col-span-2"
-          }"
-        >
-          ${
-            teams
-              ? html`<div class="min-w-0 sm:min-h-0 ${cardRows.teams}">
-                  ${this.renderLobbyCard(
-                    teams,
-                    getGameModeLabel(teams.gameConfig!),
-                  )}
-                </div>`
-              : nothing
-          }
-          ${
-            special
-              ? html`<div class="min-w-0 sm:min-h-0 ${cardRows.special}">
-                  ${this.renderLobbyCard(
-                    special,
-                    getGameModeLabel(special.gameConfig!),
-                  )}
-                </div>`
-              : nothing
-          }
-          ${this.renderUpcomingHeading()}
-        </section>
-
         ${
           this.showTrustRequired
             ? trustRequiredDialog(
@@ -802,6 +729,107 @@ export class GameModeSelector extends LitElement {
             : nothing
         }
       </div>
+    `;
+  }
+
+  /** Create / Ranked / Join: every one of them needs the lobby API. */
+  private renderMultiplayerActions() {
+    return html`
+      <div
+        class="grid grid-cols-3 gap-4 sm:compact:gap-3 h-14 sm:col-span-2 sm:row-start-4"
+      >
+        ${this.renderSmallActionCard(
+          translateText("main.create"),
+          this.openHostLobby,
+          SECONDARY_ACTION,
+          undefined,
+          true,
+        )}
+        ${this.renderSmallActionCard(
+          translateText("mode_selector.ranked_title"),
+          this.openRankedMenu,
+          SECONDARY_ACTION,
+          undefined,
+          true,
+          // Ranked admits trusted accounts only. A trusted viewer gets the
+          // green open lock; anyone else meets the red locks and the trust
+          // popup inside the ranked modal. Small, so it clears the label on
+          // narrow (mobile) buttons.
+          this.viewerTrusted
+            ? trustLockIcon(true, {
+                tooltipTitle: translateText(
+                  "mode_selector.ranked_trust_tooltip_title",
+                ),
+                position: "top-1 right-1",
+                small: true,
+              })
+            : nothing,
+        )}
+        ${this.renderSmallActionCard(
+          translateText("main.join"),
+          this.openJoinLobby,
+          SECONDARY_ACTION,
+          this.hostedLobbyCount(),
+          true,
+        )}
+      </div>
+    `;
+  }
+
+  /** The FFA card, or the spinner / outage notice while there is none. */
+  private renderHeroSlot(ffa: PublicGameInfo | undefined) {
+    return html`<div class="min-w-0 sm:col-start-1 sm:row-start-2">
+      ${
+        ffa
+          ? this.renderLobbyCard(ffa, getGameModeLabel(ffa.gameConfig!))
+          : this.offlineForLobbies()
+            ? this.renderLobbiesUnavailable()
+            : html`<div class="flex items-center justify-center h-44 sm:h-full">
+                <span
+                  class="size-24 rounded-full border-[6px] border-blue-500/30 border-t-blue-500 animate-spin"
+                ></span>
+              </div>`
+      }
+    </div>`;
+  }
+
+  /** Teams and special cards plus the heading into the lobby browser. */
+  private renderLobbyColumn(
+    heroSlot: boolean,
+    teams: PublicGameInfo | undefined,
+    special: PublicGameInfo | undefined,
+    cardRows: { special: string; teams: string },
+  ) {
+    return html`
+      <section
+        class="flex flex-col gap-4 sm:compact:gap-3 min-w-0 sm:grid sm:grid-rows-[auto_1fr_1fr] sm:row-start-2 sm:min-h-0 sm:[reading-flow:grid-rows] ${
+          heroSlot
+            ? "sm:col-start-2 sm:compact:row-end-4 sm:compact:grid-rows-[auto_minmax(7.5rem,1fr)_minmax(7.5rem,1fr)]"
+            : "sm:col-start-1 sm:col-span-2"
+        }"
+      >
+        ${
+          teams
+            ? html`<div class="min-w-0 sm:min-h-0 ${cardRows.teams}">
+                ${this.renderLobbyCard(
+                  teams,
+                  getGameModeLabel(teams.gameConfig!),
+                )}
+              </div>`
+            : nothing
+        }
+        ${
+          special
+            ? html`<div class="min-w-0 sm:min-h-0 ${cardRows.special}">
+                ${this.renderLobbyCard(
+                  special,
+                  getGameModeLabel(special.gameConfig!),
+                )}
+              </div>`
+            : nothing
+        }
+        ${this.renderUpcomingHeading()}
+      </section>
     `;
   }
 
