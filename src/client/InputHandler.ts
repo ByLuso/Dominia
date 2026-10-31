@@ -229,7 +229,11 @@ export class GameSpeedUpIntentEvent implements GameEvent {}
 export class GameSpeedDownIntentEvent implements GameEvent {}
 
 export class CenterCameraEvent implements GameEvent {
-  constructor() {}
+  /**
+   * @param minZoom Also zoom in to at least this scale, so a player zoomed far
+   *   out can see where they are; omitted, the zoom is left as it is.
+   */
+  constructor(public minZoom?: number) {}
 }
 
 export class AutoUpgradeEvent implements GameEvent {

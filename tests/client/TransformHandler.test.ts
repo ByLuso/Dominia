@@ -1,5 +1,6 @@
 import { EventBus } from "@openfront/shared/EventBus";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { CenterCameraEvent } from "../../src/client/InputHandler";
 import {
   GOTO_INTERVAL_MS,
   GoToPositionEvent,
@@ -7,11 +8,12 @@ import {
 } from "../../src/client/TransformHandler";
 import type { GameView } from "../../src/client/view";
 
-function makeHandler() {
+function makeHandler(myPlayerAt: { x: number; y: number } | null = null) {
   const game = {
     width: () => 400,
     height: () => 400,
-    myPlayer: () => null,
+    myPlayer: () =>
+      myPlayerAt === null ? null : { nameLocation: () => myPlayerAt },
   } as unknown as GameView;
   const eventBus = new EventBus();
   const handler = new TransformHandler(
@@ -59,6 +61,30 @@ describe("TransformHandler", () => {
       vi.advanceTimersByTime(GOTO_INTERVAL_MS * 5);
       expect(handler.offsetX).toBe(x);
       expect(handler.offsetY).toBe(y);
+    });
+
+    // The in-game locate button: a player zoomed far out cannot see where
+    // they are even once centred, so it also zooms in up to a minimum.
+    it("locate zooms a far-out camera in to the minimum zoom", () => {
+      const { handler, eventBus } = makeHandler({ x: 300, y: 100 });
+      handler.override(0, 0, 0.5);
+
+      eventBus.emit(new CenterCameraEvent(5));
+      vi.advanceTimersByTime(GOTO_INTERVAL_MS * 200);
+      expect(handler.scale).toBeCloseTo(5, 1);
+    });
+
+    it("locate leaves a closer zoom alone, and the C key never zooms", () => {
+      const { handler, eventBus } = makeHandler({ x: 300, y: 100 });
+      handler.override(0, 0, 8);
+      eventBus.emit(new CenterCameraEvent(5));
+      vi.advanceTimersByTime(GOTO_INTERVAL_MS * 200);
+      expect(handler.scale).toBe(8);
+
+      handler.override(0, 0, 0.5);
+      eventBus.emit(new CenterCameraEvent());
+      vi.advanceTimersByTime(GOTO_INTERVAL_MS * 200);
+      expect(handler.scale).toBe(0.5);
     });
   });
 });

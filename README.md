@@ -63,8 +63,12 @@ version, so friends without the app can join from a browser.
 a two-player game peaks around 280 MB). It sleeps after 15 minutes without
 traffic and takes about a minute to wake up. On Render, the start script
 takes the public hostname and the commit from `RENDER_EXTERNAL_HOSTNAME`
-and `RENDER_GIT_COMMIT`, and every push to main redeploys it, so it stays on
-the commit the Android workflow builds.
+and `RENDER_GIT_COMMIT`.
+
+Deploys are manual (Manual Deploy on Render): a deploy restarts the server,
+ending every game in progress and turning away apps built from an older
+commit. Deploy when nobody is playing, then install the APK the Android
+workflow built from the same commit.
 
 1. On Render, create a Blueprint from this repository.
 2. The Android workflow builds against `dominia-8fm9.onrender.com` with one

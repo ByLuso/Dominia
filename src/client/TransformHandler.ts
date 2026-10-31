@@ -53,7 +53,7 @@ export class TransformHandler {
     this.eventBus.on(GoToPlayerEvent, (e) => this.onGoToPlayer(e));
     this.eventBus.on(GoToPositionEvent, (e) => this.onGoToPosition(e));
     this.eventBus.on(GoToUnitEvent, (e) => this.onGoToUnit(e));
-    this.eventBus.on(CenterCameraEvent, () => this.centerCamera());
+    this.eventBus.on(CenterCameraEvent, (e) => this.centerCamera(e.minZoom));
   }
 
   public updateCanvasBoundingRect() {
@@ -229,12 +229,15 @@ export class TransformHandler {
     this.intervalID = setInterval(() => this.goTo(), GOTO_INTERVAL_MS);
   }
 
-  centerCamera() {
+  centerCamera(minZoom?: number) {
     this.clearTarget();
     const player = this.game.myPlayer();
     const nameLocation = player?.nameLocation();
     if (!nameLocation) return;
     this.target = new Cell(nameLocation.x, nameLocation.y);
+    if (minZoom !== undefined && this.scale < minZoom) {
+      this.targetScale = minZoom;
+    }
     this.intervalID = setInterval(() => this.goTo(), GOTO_INTERVAL_MS);
   }
 

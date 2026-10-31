@@ -11,7 +11,7 @@ import { Controller } from "../../Controller";
 import { isDesktopShell } from "../../DesktopShell";
 import { gamePortal } from "../../GamePortal";
 import { showInGameAlert, showInGameConfirm } from "../../InGameModal";
-import { TogglePauseIntentEvent } from "../../InputHandler";
+import { CenterCameraEvent, TogglePauseIntentEvent } from "../../InputHandler";
 import { PauseGameIntentEvent, SendWinnerEvent } from "../../Transport";
 import { homeHref, showToast, translateText } from "../../Utils";
 import { GameView } from "../../view";
@@ -27,6 +27,11 @@ const newLobbyIcon = assetUrl("images/ReplayRegularIconWhite.svg");
 const settingsIcon = assetUrl("images/SettingIconWhite.svg");
 const fullscreenIcon = assetUrl("images/FullscreenIconWhite.svg");
 const exitFullscreenIcon = assetUrl("images/ExitFullscreenIconWhite.svg");
+const locateIcon = assetUrl("images/LocateIconWhite.svg");
+
+// The zoom the locate button brings a far-zoomed-out player in to: close
+// enough to see a freshly spawned territory on a phone.
+const LOCATE_MIN_ZOOM = 5;
 
 const LAST_MINUTE_SECONDS = 60;
 const FLASH_TIMER_SECONDS = 30;
@@ -300,6 +305,10 @@ export class GameRightSidebar extends LitElement implements Controller {
     }
   }
 
+  private onLocateButtonClick = () => {
+    this.eventBus.emit(new CenterCameraEvent(LOCATE_MIN_ZOOM));
+  };
+
   render() {
     if (this.game === undefined) return html``;
 
@@ -375,6 +384,22 @@ export class GameRightSidebar extends LitElement implements Controller {
 
         <!-- Buttons -->
         ${this.maybeRenderReplayButtons()}
+        ${
+          this.game.myPlayer()?.isAlive()
+            ? html`<div
+                class="cursor-pointer"
+                @click=${this.onLocateButtonClick}
+                title=${translateText("user_setting.center_camera_desc")}
+              >
+                <img
+                  src=${locateIcon}
+                  alt=${translateText("user_setting.center_camera_desc")}
+                  width="20"
+                  height="20"
+                />
+              </div>`
+            : ""
+        }
 
         <div class="cursor-pointer" @click=${this.onSettingsButtonClick}>
           <img src=${settingsIcon} alt="settings" width="20" height="20" />
