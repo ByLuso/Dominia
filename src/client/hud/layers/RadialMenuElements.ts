@@ -70,6 +70,9 @@ export interface MenuElement {
   fontSize?: string;
   tooltipItems?: TooltipItem[];
   tooltipKeys?: TooltipKey[];
+  // Short text under the icon, always visible (prices: there is no hover on
+  // a phone to reveal the tooltip).
+  label?: string;
 
   cooldown?: (params: MenuElementParams) => number;
   disabled: (params: MenuElementParams) => boolean;
@@ -447,6 +450,7 @@ function createMenuElements(
               : COLORS.building
             : COLORS.building,
         icon: item.icon,
+        label: renderNumber(params.buildMenu.cost(item)),
         tooltipItems: [
           { text: translateText(item.key ?? ""), className: "title" },
           {
@@ -643,6 +647,7 @@ function sellStructureElement(params: MenuElementParams): MenuElement {
       p.game.inSpawnPhase() ||
       p.myPlayer.deleteUnitCooldown() > 0,
     icon: goldCoinIcon,
+    label: selected === undefined ? undefined : `+${renderNumber(refund)}`,
     color: COLORS.sell,
     tooltipItems: [
       {
@@ -685,6 +690,7 @@ function upgradeStructureElement(
     name: "upgrade",
     disabled: (p: MenuElementParams) => !affordable(p),
     icon: upgradeIcon,
+    label: renderNumber(cost),
     color: (p: MenuElementParams) =>
       affordable(p) ? COLORS.build : COLORS.disabled,
     tooltipItems: [

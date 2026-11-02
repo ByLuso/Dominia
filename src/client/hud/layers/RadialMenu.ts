@@ -647,6 +647,21 @@ export class RadialMenu implements Controller {
             .style("opacity", disabled ? 0.5 : 1)
             .text(d.data.text);
         } else {
+          if (d.data.label) {
+            content
+              .append("text")
+              .attr("text-anchor", "middle")
+              .attr("dominant-baseline", "hanging")
+              .attr("x", arc.centroid(d)[0])
+              .attr("y", arc.centroid(d)[1] + this.config.iconSize / 2 + 1)
+              .attr("fill", "white")
+              .attr("font-size", "11px")
+              .attr("font-weight", "bold")
+              .attr("font-family", "Arial, sans-serif")
+              .style("opacity", disabled ? 0.5 : 1)
+              .style("pointer-events", "none")
+              .text(d.data.label);
+          }
           const imgSel = content
             .append("image")
             .attr("xlink:href", d.data.icon!)
