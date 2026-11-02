@@ -30,6 +30,7 @@ import type {
   TerrainRect,
   UnitState,
 } from "../types";
+import type { RangeCircle } from "./passes/RangeCirclePass";
 import type { SpawnCenter } from "./passes/SpawnOverlayPass";
 import type { AttackTroopLabel } from "./passes/WorldTextPass";
 import { GPURenderer } from "./Renderer";
@@ -286,6 +287,11 @@ export class MapRenderer {
   /** Update ghost structure preview (build-mode visualization). null = clear. */
   updateGhostPreview(data: GhostPreviewData | null): void {
     this.renderer?.updateGhostPreview(data);
+  }
+
+  /** Range of the structure the radial menu is open on. null = hide. */
+  updateSelectedStructureRange(circle: RangeCircle | null): void {
+    this.renderer?.updateSelectedStructureRange(circle);
   }
 
   // ---- Nuke UI ----

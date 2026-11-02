@@ -14,6 +14,8 @@ import {
   PlayerInfo,
   PlayerProfile,
   PlayerType,
+  STRUCTURE_SELECTION_RADIUS,
+  Structures,
   UnitType,
 } from "@openfront/engine-api/game/GameTypes";
 import {
@@ -34,7 +36,7 @@ import { Executor } from "./execution/ExecutionManager";
 import { RecomputeRailClusterExecution } from "./execution/RecomputeRailClusterExecution";
 import { SpawnTimerExecution } from "./execution/SpawnTimerExecution";
 import { WinCheckExecution } from "./execution/WinCheckExecution";
-import { Game, Player } from "./game/Game";
+import { Game, Player, Unit } from "./game/Game";
 import { createGame } from "./game/GameImpl";
 import { humanDisconnects, humanStatsSnapshot } from "./game/HumanStats";
 import { placeName, placeSpawnName } from "./game/NameBoxCalculator";
@@ -363,6 +365,18 @@ export class GameRunner {
       canEmbargoAll: player.canEmbargoAll(),
     } as PlayerActions;
 
+    if (tile !== null && this.game.owner(tile) === player) {
+      const selected = this.selectedStructure(player, tile);
+      if (selected !== null) {
+        actions.sellableStructure = {
+          unitId: selected.id(),
+          type: selected.type(),
+          level: selected.level(),
+          refund: player.structureSellRefund(selected),
+        };
+      }
+    }
+
     if (tile !== null && this.game.hasOwner(tile)) {
       const other = this.game.owner(tile) as Player;
       actions.interaction = {
@@ -379,6 +393,22 @@ export class GameRunner {
     }
 
     return actions;
+  }
+
+  // The player's own finished structure nearest `tile`, if one is within
+  // STRUCTURE_SELECTION_RADIUS.
+  private selectedStructure(player: Player, tile: TileRef): Unit | null {
+    let best: Unit | null = null;
+    let bestDist = Infinity;
+    for (const unit of player.units(Structures.types)) {
+      if (unit.isUnderConstruction() || unit.isMarkedForDeletion()) continue;
+      const dist = this.game.manhattanDist(unit.tile(), tile);
+      if (dist <= STRUCTURE_SELECTION_RADIUS && dist < bestDist) {
+        best = unit;
+        bestDist = dist;
+      }
+    }
+    return best;
   }
 
   public playerProfile(playerID: number): PlayerProfile {

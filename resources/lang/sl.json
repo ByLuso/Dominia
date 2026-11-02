@@ -646,10 +646,7 @@
     "not_authorized": "Nimate dovoljenja za dostop do tega spletnega mesta.",
     "contact_admin": "Če menite, da se vam je to sporočilo prikazalo pomotoma, se obrnite na skrbnika spletnega mesta."
   },
-  "radial_menu": {
-    "delete_unit_title": "Pobriši enoto",
-    "delete_unit_description": "Pritisni za odstranitev najbližjih enot"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "Avatar"
   },

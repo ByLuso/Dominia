@@ -2079,8 +2079,6 @@
     "visit_store": "مشاهده فروشگاه"
   },
   "radial_menu": {
-    "delete_unit_description": "کلیک کنید تا نزدیک‌ترین واحد حذف شود",
-    "delete_unit_title": "حذف واحد",
     "upgrade_x": "ارتقا x{amount}"
   },
   "relation": {

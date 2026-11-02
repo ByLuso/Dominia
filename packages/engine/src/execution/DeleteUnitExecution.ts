@@ -1,4 +1,5 @@
 import { MessageType } from "@openfront/engine-api/game/GameTypes";
+import { renderNumber } from "@openfront/engine-lib/Format";
 import {
   zInt,
   zPlayerRef,
@@ -89,13 +90,28 @@ export class DeleteUnitExecution implements Execution {
       return;
     }
     if (this.unit.isOverdueDeletion()) {
+      // Priced before the delete: the unit still counts towards the player's
+      // holdings, which is what its value is measured against.
+      const refund = this.player.structureSellRefund(this.unit);
+      const tile = this.unit.tile();
       this.unit.delete(false);
 
-      this.mg.displayMessage(
-        `events_display.unit_voluntarily_deleted`,
-        MessageType.UNIT_DESTROYED,
-        this.player.id(),
-      );
+      if (refund > 0n) {
+        this.player.addGold(refund, tile);
+        this.mg.displayMessage(
+          "events_display.structure_sold",
+          MessageType.UNIT_DESTROYED,
+          this.player.id(),
+          refund,
+          { gold: renderNumber(refund) },
+        );
+      } else {
+        this.mg.displayMessage(
+          `events_display.unit_voluntarily_deleted`,
+          MessageType.UNIT_DESTROYED,
+          this.player.id(),
+        );
+      }
       this.active = false;
     }
   }

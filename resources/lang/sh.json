@@ -1687,8 +1687,6 @@
     "visit_store": "Poseti prodavnicu"
   },
   "radial_menu": {
-    "delete_unit_description": "Kliknite da obrišete najbližu jedinicu",
-    "delete_unit_title": "Obriši jedinicu",
     "upgrade_x": "Unapređenje x{amount}"
   },
   "relation": {

@@ -1834,8 +1834,6 @@
     "visit_store": "ストアを見る"
   },
   "radial_menu": {
-    "delete_unit_description": "クリックで最も近いユニットを削除します",
-    "delete_unit_title": "ユニットを削除する",
     "upgrade_x": "×{amount}アップグレード"
   },
   "relation": {

@@ -49,7 +49,7 @@ import { NukeTelegraphPass } from "./passes/NukeTelegraphPass";
 import { NukeTrajectoryPass } from "./passes/NukeTrajectoryPass";
 import { PointLightPass } from "./passes/PointLightPass";
 import { RailroadPass } from "./passes/RailroadPass";
-import { RangeCirclePass } from "./passes/RangeCirclePass";
+import { RangeCircle, RangeCirclePass } from "./passes/RangeCirclePass";
 import { SAMRadiusPass } from "./passes/SamRadiusPass";
 import { SelectionBoxPass } from "./passes/SelectionBoxPass";
 import { SkinAtlasArray } from "./passes/SkinAtlasArray";
@@ -135,6 +135,8 @@ export class GPURenderer {
   private namePass: NamePass;
   private fxPass: FxPass;
   private rangeCirclePass: RangeCirclePass;
+  // The range of the structure the radial menu is open on.
+  private selectedRangePass: RangeCirclePass;
   private samRadiusPass: SAMRadiusPass;
   private crosshairPass: CrosshairPass;
   private railroadPass: RailroadPass;
@@ -554,6 +556,7 @@ export class GPURenderer {
 
     // --- Range circle (ghost preview radius) ---
     this.rangeCirclePass = new RangeCirclePass(gl);
+    this.selectedRangePass = new RangeCirclePass(gl);
 
     // --- SAM radius overlay (dashed green circles during build mode) ---
     this.samRadiusPass = new SAMRadiusPass(gl, mapW, this.settings);
@@ -1093,6 +1096,10 @@ export class GPURenderer {
     );
   }
 
+  updateSelectedStructureRange(circle: RangeCircle | null): void {
+    this.selectedRangePass.setCircle(circle);
+  }
+
   updateNukeTrajectory(data: NukeTrajectoryData | null): void {
     this.nukeTrajectoryPass.update(data);
   }
@@ -1369,6 +1376,7 @@ export class GPURenderer {
     if (pe.falloutBloom) this.bloomPass.draw(cam, this.frameTick);
     this.samRadiusPass.draw(cam);
     this.rangeCirclePass.draw(cam);
+    this.selectedRangePass.draw(cam);
     this.nukeTrajectoryPass.draw(cam);
     this.crosshairPass.draw(cam);
     if (pe.structure) this.structurePass.draw(cam, zoom);
@@ -1506,6 +1514,7 @@ export class GPURenderer {
     this.smallPlayerGlowPass.dispose();
     this.railroadPass.dispose();
     this.rangeCirclePass.dispose();
+    this.selectedRangePass.dispose();
     this.samRadiusPass.dispose();
     this.crosshairPass.dispose();
     this.structurePass.dispose();

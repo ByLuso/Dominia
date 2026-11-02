@@ -915,10 +915,7 @@
     "button_title": "Pilih bendera!",
     "search_flag": "Cari..."
   },
-  "radial_menu": {
-    "delete_unit_title": "Hapus Unit",
-    "delete_unit_description": "Klik untuk menghapus unit terdekat"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "Avatar"
   },

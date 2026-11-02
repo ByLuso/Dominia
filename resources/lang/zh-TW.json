@@ -1768,8 +1768,6 @@
     "visit_store": "前往商店"
   },
   "radial_menu": {
-    "delete_unit_description": "點選刪除最近的單位",
-    "delete_unit_title": "刪除單位",
     "upgrade_x": "升級 x{amount}"
   },
   "relation": {

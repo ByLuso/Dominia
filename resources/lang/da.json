@@ -1185,10 +1185,7 @@
     "title": "Venter på spilstart...",
     "waiting_for_players": "Venter på spillere"
   },
-  "radial_menu": {
-    "delete_unit_description": "Tryk for at slette den nærmeste enhed",
-    "delete_unit_title": "Slet Enhed"
-  },
+  "radial_menu": {},
   "relation": {
     "default": "Standard",
     "distrustful": "Mistroisk",

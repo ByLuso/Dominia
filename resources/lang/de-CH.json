@@ -915,10 +915,7 @@
     "button_title": "Wäu ä Flagge us!",
     "search_flag": "Sueche..."
   },
-  "radial_menu": {
-    "delete_unit_title": "Einheit lösche",
-    "delete_unit_description": "Klick, um die nächstgelegeni Einheit z lösche"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "Profilbüud"
   },

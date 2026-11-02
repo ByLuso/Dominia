@@ -1834,8 +1834,6 @@
     "visit_store": "상점 방문"
   },
   "radial_menu": {
-    "delete_unit_description": "클릭하여 가장 가까운 유닛을 삭제합니다",
-    "delete_unit_title": "유닛 삭제",
     "upgrade_x": "업그레이드 x{amount}"
   },
   "relation": {

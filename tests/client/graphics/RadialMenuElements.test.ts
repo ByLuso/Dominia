@@ -339,6 +339,75 @@ describe("RadialMenuElements", () => {
       expect(deleteMenu).toBeDefined();
     });
 
+    describe("a tapped structure of your own", () => {
+      beforeEach(() => {
+        mockPlayer = {
+          ...mockPlayer,
+          deleteUnitCooldown: vi.fn(() => 0),
+        } as unknown as PlayerView;
+        mockParams.myPlayer = mockPlayer;
+        mockGame.myPlayer = vi.fn(() => ({ gold: () => 1_000n })) as any;
+        mockParams.playerActionHandler = { handleDeleteUnit: vi.fn() } as any;
+        mockPlayerActions.sellableStructure = {
+          unitId: 42,
+          type: UnitType.City,
+          level: 2,
+          refund: 300n,
+        };
+        mockPlayerActions.buildableUnits[0] = {
+          type: UnitType.City,
+          canBuild: false,
+          canUpgrade: 42,
+          cost: 500n,
+          upgradeCosts: [500n],
+        };
+      });
+
+      it("sells it for its refund", () => {
+        const sell = rootMenuElement.subMenu!(mockParams).find(
+          (item) => item.id === Slot.Delete,
+        )!;
+        expect(sell.disabled(mockParams)).toBe(false);
+        expect(sell.tooltipItems?.[1].text).toContain("300");
+
+        sell.action!(mockParams);
+        expect(
+          (mockParams.playerActionHandler as any).handleDeleteUnit,
+        ).toHaveBeenCalledWith(42);
+      });
+
+      it("upgrades it one level", () => {
+        const upgrade = rootMenuElement.subMenu!(mockParams).find(
+          (item) => item.id === Slot.Upgrade,
+        )!;
+        expect(upgrade.disabled(mockParams)).toBe(false);
+        expect(upgrade.tooltipItems?.[1].text).toContain("500");
+
+        upgrade.action!(mockParams);
+        const intent = (mockParams.eventBus.emit as any).mock.calls[0][0];
+        expect(intent).toMatchObject({ unitId: 42, amount: 1 });
+      });
+
+      it("cannot upgrade it without the gold", () => {
+        mockGame.myPlayer = vi.fn(() => ({ gold: () => 100n })) as any;
+        const upgrade = rootMenuElement.subMenu!(mockParams).find(
+          (item) => item.id === Slot.Upgrade,
+        )!;
+        expect(upgrade.disabled(mockParams)).toBe(true);
+      });
+
+      it("offers no upgrade and no sale without a structure", () => {
+        delete mockPlayerActions.sellableStructure;
+        const subMenu = rootMenuElement.subMenu!(mockParams);
+        expect(
+          subMenu.find((item) => item.id === Slot.Upgrade),
+        ).toBeUndefined();
+        expect(
+          subMenu.find((item) => item.id === Slot.Delete)!.disabled(mockParams),
+        ).toBe(true);
+      });
+    });
+
     it("should show attack and boat menu on enemy territory", () => {
       const enemyPlayer = {
         id: () => 2,

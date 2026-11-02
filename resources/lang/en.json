@@ -922,6 +922,7 @@
     "sent_emoji_all": "Sent everyone: {emoji}",
     "sent_gold_to_player": "Sent {gold} gold to {name}",
     "sent_troops_to_player": "Sent {troops} troops to {name}",
+    "structure_sold": "Structure sold for {gold} gold",
     "trade_ship_captured": "Your trade ship was captured by {name}",
     "unit_destroyed": "Your {unit} was destroyed",
     "unit_voluntarily_deleted": "Unit voluntarily deleted",
@@ -2159,8 +2160,9 @@
     "visit_store": "Visit store"
   },
   "radial_menu": {
-    "delete_unit_description": "Click to delete the nearest unit",
-    "delete_unit_title": "Delete Unit",
+    "sell_structure_none": "No structure of yours here",
+    "sell_structure_title": "Sell structure",
+    "upgrade_structure_title": "Upgrade to level {level}",
     "upgrade_x": "Upgrade x{amount}"
   },
   "relation": {

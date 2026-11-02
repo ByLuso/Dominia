@@ -1596,8 +1596,6 @@
     "visit_store": "Посети магазина"
   },
   "radial_menu": {
-    "delete_unit_description": "Кликни, за да изтриеш най-близкия елемент",
-    "delete_unit_title": "Изтриване на елемент",
     "upgrade_x": "Надграждане x{amount}"
   },
   "relation": {

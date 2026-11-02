@@ -640,8 +640,5 @@
     "not_authorized": "Sinulla ei ole oikeutta käyttää tätä verkkosivustoa.",
     "contact_admin": "Jos uskot näkeväsi tämän viestin virheenä, ota yhteyttä sivuston ylläpitoon."
   },
-  "radial_menu": {
-    "delete_unit_title": "Poista yksikkö",
-    "delete_unit_description": "Napsauta poistaaksesi lähimmän yksikön"
-  }
+  "radial_menu": {}
 }

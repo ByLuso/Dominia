@@ -17,6 +17,7 @@ import {
   PlayerProfile,
   PlayerType,
   Relation,
+  SELL_REFUND_PERCENT,
   Structures,
   Team,
   TerraNullius,
@@ -1199,6 +1200,20 @@ export class PlayerImpl implements Player {
 
   recordDeleteUnit(): void {
     this.lastDeleteUnitTick = this.mg.ticks();
+  }
+
+  structureSellRefund(unit: Unit): Gold {
+    if (!Structures.has(unit.type()) || unit.isUnderConstruction()) return 0n;
+    // Prices rise with every unit of a type the player holds, so a structure
+    // is valued at the price of the player's last `level` buys of that type
+    // (extra units -1..-level), never the next one: selling and buying back
+    // always costs more than it pays.
+    const cost = this.mg.config().unitInfo(unit.type()).cost;
+    let value = 0n;
+    for (let k = 1; k <= unit.level(); k++) {
+      value += cost(this.mg, this, -k);
+    }
+    return (value * SELL_REFUND_PERCENT) / 100n;
   }
 
   canEmbargoAll(): boolean {

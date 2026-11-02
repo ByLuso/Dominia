@@ -770,6 +770,7 @@
     "sent_emoji": "Enviado a {name}: {emoji}",
     "sent_gold_to_player": "Enviaste {gold} de oro a {name}",
     "sent_troops_to_player": "Enviaste {troops} tropas a {name}",
+    "structure_sold": "Edificio vendido por {gold} de oro",
     "trade_ship_captured": "Tu nave de comercio fue capturada por {name}",
     "unit_destroyed": "Tú {unit} fue destruido",
     "unit_voluntarily_deleted": "Unidad eliminada voluntariamente",
@@ -1768,8 +1769,9 @@
     "visit_store": "Visitar tienda"
   },
   "radial_menu": {
-    "delete_unit_description": "Clic para eliminar la unidad más cercana",
-    "delete_unit_title": "Eliminar unidad",
+    "sell_structure_none": "Aquí no hay ningún edificio tuyo",
+    "sell_structure_title": "Vender edificio",
+    "upgrade_structure_title": "Mejorar a nivel {level}",
     "upgrade_x": "Mejorar x{amount}"
   },
   "relation": {

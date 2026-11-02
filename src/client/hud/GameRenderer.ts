@@ -362,6 +362,7 @@ export function createRenderer(
       buildMenu,
       uiState,
       playerPanel,
+      view,
     ),
     spawnTimer,
     immunityTimer,

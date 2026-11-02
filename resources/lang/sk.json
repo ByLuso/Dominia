@@ -597,8 +597,5 @@
     "not_authorized": "Nemáš oprávnenie na prístup k tejto stránke.",
     "contact_admin": "Ak si myslíš, že túto správu vidíš omylom, prosím kontaktuj administrátora webstránky."
   },
-  "radial_menu": {
-    "delete_unit_title": "Vymazať jednotku",
-    "delete_unit_description": "Ťukni na vymazanie najbližšej jednotky"
-  }
+  "radial_menu": {}
 }

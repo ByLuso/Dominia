@@ -2079,8 +2079,6 @@
     "visit_store": "Bezoek winkel"
   },
   "radial_menu": {
-    "delete_unit_description": "Klik om het dichtstbijzijnde gebouw te verwijderen",
-    "delete_unit_title": "Verwijder gebouw",
     "upgrade_x": "Upgrade x{amount}"
   },
   "relation": {

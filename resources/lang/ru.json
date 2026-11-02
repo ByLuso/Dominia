@@ -1768,8 +1768,6 @@
     "visit_store": "Посетить магазин"
   },
   "radial_menu": {
-    "delete_unit_description": "Нажмите, чтобы удалить ближайший юнит",
-    "delete_unit_title": "Удалить юнит",
     "upgrade_x": "Улучшить x{amount}"
   },
   "relation": {

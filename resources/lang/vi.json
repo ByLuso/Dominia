@@ -2079,8 +2079,6 @@
     "visit_store": "Ghé qua cửa hàng"
   },
   "radial_menu": {
-    "delete_unit_description": "Nhấp để xóa đơn vị gần nhất",
-    "delete_unit_title": "Xoá đơn vị",
     "upgrade_x": "Nâng cấp ×{amount}"
   },
   "relation": {

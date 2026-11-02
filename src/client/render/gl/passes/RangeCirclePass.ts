@@ -13,6 +13,12 @@ import { createProgram } from "../utils/GlUtils";
 import fragSrc from "../shaders/range-circle/range-circle.frag.glsl?raw";
 import vertSrc from "../shaders/range-circle/range-circle.vert.glsl?raw";
 
+export interface RangeCircle {
+  tileX: number;
+  tileY: number;
+  radius: number;
+}
+
 export class RangeCirclePass {
   private gl: WebGL2RenderingContext;
   private program: WebGLProgram;
@@ -62,6 +68,14 @@ export class RangeCirclePass {
       this.radius = 0;
       this.warning = false;
     }
+  }
+
+  /** Show a plain white circle; null hides it. */
+  setCircle(circle: RangeCircle | null): void {
+    this.centerX = circle?.tileX ?? 0;
+    this.centerY = circle?.tileY ?? 0;
+    this.radius = circle?.radius ?? 0;
+    this.warning = false;
   }
 
   draw(cameraMatrix: Float32Array): void {

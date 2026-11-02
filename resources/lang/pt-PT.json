@@ -597,8 +597,5 @@
     "not_authorized": "Não está autorizado a acessar este site.",
     "contact_admin": "Se acredita que está a ver esta mensagem por engano, entre em contacto com um administrador."
   },
-  "radial_menu": {
-    "delete_unit_title": "Eliminar unidade",
-    "delete_unit_description": "Clique para eliminar a unidade mais próxima"
-  }
+  "radial_menu": {}
 }

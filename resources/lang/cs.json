@@ -1768,8 +1768,6 @@
     "visit_store": "Navštívit obchod"
   },
   "radial_menu": {
-    "delete_unit_description": "Kliknutím odstraníte nejbližší jednotku",
-    "delete_unit_title": "Smazat jednotku",
     "upgrade_x": "Vylepšit ×{amount}"
   },
   "relation": {

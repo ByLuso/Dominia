@@ -876,10 +876,7 @@
     "button_title": "Escull una bandera!",
     "search_flag": "Busca..."
   },
-  "radial_menu": {
-    "delete_unit_title": "Elimina l'estructura",
-    "delete_unit_description": "Clica per esborrar l'estructura més propera"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "Avatar"
   },

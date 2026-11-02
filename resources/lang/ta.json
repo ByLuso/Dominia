@@ -2079,8 +2079,6 @@
     "visit_store": "கடைக்குச் செல்"
   },
   "radial_menu": {
-    "delete_unit_description": "அருகிலுள்ள படை அலகை நீக்க கிளிக் செய்க",
-    "delete_unit_title": "படை அலகை நீக்கு",
     "upgrade_x": "×{amount} மேம்படுத்து"
   },
   "relation": {

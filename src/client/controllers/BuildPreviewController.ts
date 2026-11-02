@@ -32,6 +32,7 @@ import {
   type SAMInfo,
 } from "../render/gl/utils/NukeTrajectory";
 import type { GhostPreviewData } from "../render/types";
+import { structureRangeRadius } from "../StructureRange";
 import { TransformHandler } from "../TransformHandler";
 import {
   BuildUnitIntentEvent,
@@ -754,19 +755,15 @@ export class BuildPreviewController implements Controller {
 
   private resolveGhostRangeRadius(u: BuildableUnit): number {
     switch (u.type) {
-      case UnitType.SAMLauncher: {
-        const level = this.resolveGhostRangeLevel(u) ?? 1;
-        return this.game.config().samRange(level);
-      }
       case UnitType.AtomBomb:
       case UnitType.HydrogenBomb:
         return this.game.config().nukeMagnitudes(u.type).outer;
-      case UnitType.Factory:
-        return this.game.config().trainStationMaxRange();
-      case UnitType.DefensePost:
-        return this.game.config().defensePostRange();
       default:
-        return 0;
+        return structureRangeRadius(
+          this.game,
+          u.type,
+          this.resolveGhostRangeLevel(u) ?? 1,
+        );
     }
   }
 

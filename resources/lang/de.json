@@ -2079,8 +2079,6 @@
     "visit_store": "Zum Shop"
   },
   "radial_menu": {
-    "delete_unit_description": "Klicken, um die nächstgelegene Einheit zu löschen",
-    "delete_unit_title": "Einheit löschen",
     "upgrade_x": "Upgrade x{amount}"
   },
   "relation": {

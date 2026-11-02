@@ -2079,8 +2079,6 @@
     "visit_store": "Visite a loja"
   },
   "radial_menu": {
-    "delete_unit_description": "Clique para excluir a unidade mais próxima",
-    "delete_unit_title": "Excluir unidade",
     "upgrade_x": "Evolua x{amount}"
   },
   "relation": {

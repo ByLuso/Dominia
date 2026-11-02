@@ -2079,8 +2079,6 @@
     "visit_store": "Відвідати крамницю"
   },
   "radial_menu": {
-    "delete_unit_description": "Клацніть, щоб видалити найближчий юніт",
-    "delete_unit_title": "Видалити юніт",
     "upgrade_x": "Покращити ×{amount}"
   },
   "relation": {

@@ -867,10 +867,7 @@
     "not_authorized": "Bu siteye erişim için yetkiniz yok.",
     "contact_admin": "Bu mesajı hatayla gördüğünüzü düşünüyorsanız, lütfen website yöneticisiyle iletişime geçin."
   },
-  "radial_menu": {
-    "delete_unit_title": "Birimi Sil",
-    "delete_unit_description": "En yakın birimi silmek için tıklayın"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "Profil Resmi"
   },

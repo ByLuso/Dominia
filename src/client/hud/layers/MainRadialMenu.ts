@@ -3,6 +3,8 @@ import { PlayerActions } from "@openfront/engine-api/game/GameTypes";
 import { assetUrl } from "@openfront/shared/AssetUrls";
 import { EventBus } from "@openfront/shared/EventBus";
 import { Controller } from "../../Controller";
+import type { MapRenderer } from "../../render/gl";
+import { structureRangeRadius } from "../../StructureRange";
 import { TransformHandler } from "../../TransformHandler";
 import { UIState } from "../../UIState";
 import { GameView, PlayerView } from "../../view";
@@ -51,6 +53,7 @@ export class MainRadialMenu implements Controller {
     private buildMenu: BuildMenu,
     private uiState: UIState,
     private playerPanel: PlayerPanel,
+    private view: MapRenderer,
   ) {
     const menuConfig: RadialMenuConfig = {
       centerButtonIcon: swordIcon,
@@ -167,6 +170,7 @@ export class MainRadialMenu implements Controller {
     );
 
     this.radialMenu.setParams(params);
+    this.showSelectedRange(actions);
     if (screenX !== null && screenY !== null) {
       this.radialMenu.showRadialMenu(screenX, screenY);
     } else {
@@ -174,7 +178,31 @@ export class MainRadialMenu implements Controller {
     }
   }
 
+  // The range of the structure a tap selected, while the menu is open on it.
+  private showSelectedRange(actions: PlayerActions) {
+    const selected = actions.sellableStructure;
+    const unit =
+      selected === undefined ? null : this.game.unit(selected.unitId);
+    const radius =
+      selected === undefined
+        ? 0
+        : structureRangeRadius(this.game, selected.type, selected.level);
+    this.view.updateSelectedStructureRange(
+      unit && radius > 0
+        ? {
+            tileX: this.game.x(unit.tile()),
+            tileY: this.game.y(unit.tile()),
+            radius,
+          }
+        : null,
+    );
+  }
+
   async tick() {
+    // The menu also closes itself (a tap elsewhere), so drop the range then.
+    if (!this.radialMenu.isMenuVisible()) {
+      this.view.updateSelectedStructureRange(null);
+    }
     if (!this.radialMenu.isMenuVisible() || this.clickedTile === null) return;
     const myPlayer = this.game.myPlayer();
     if (myPlayer === null) return;
@@ -190,6 +218,7 @@ export class MainRadialMenu implements Controller {
   }
 
   closeMenu() {
+    this.view.updateSelectedStructureRange(null);
     if (this.radialMenu.isMenuVisible()) {
       this.radialMenu.hideRadialMenu();
     }

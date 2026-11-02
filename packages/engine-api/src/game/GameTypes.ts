@@ -348,7 +348,24 @@ export interface PlayerActions {
   canSendEmojiAllPlayers: boolean;
   canEmbargoAll?: boolean;
   interaction?: PlayerInteraction;
+  // The player's own finished structure a tap on this tile selects (the
+  // closest within STRUCTURE_SELECTION_RADIUS), and what selling it pays.
+  sellableStructure?: SellableStructure;
 }
+
+export interface SellableStructure {
+  unitId: number;
+  type: UnitType;
+  level: number;
+  refund: Gold;
+}
+
+// How far (Manhattan tiles) from a tapped tile a structure is still the one
+// being tapped: sell, upgrade and range all act on it.
+export const STRUCTURE_SELECTION_RADIUS = 5;
+
+// Selling a structure pays back this share of its value.
+export const SELL_REFUND_PERCENT = 60n;
 
 export interface BuildableUnit {
   canBuild: TileRef | false;

@@ -14,7 +14,6 @@ import {
 import { Emoji, flattenedEmojiTable } from "@openfront/engine-api/Schemas";
 import { Config } from "@openfront/engine-lib/configuration/Config";
 import { renderNumber } from "@openfront/engine-lib/Format";
-import { findClosestBy } from "@openfront/engine-lib/Util";
 import { assetUrl } from "@openfront/shared/AssetUrls";
 import { UIState } from "../../UIState";
 import { translateText } from "../../Utils";
@@ -42,7 +41,8 @@ const infoIcon = assetUrl("images/InfoIcon.svg");
 const swordIcon = assetUrl("images/SwordIconWhite.svg");
 const targetIcon = assetUrl("images/TargetIconWhite.svg");
 const traitorIcon = assetUrl("images/TraitorIconWhite.svg");
-const xIcon = assetUrl("images/XIcon.svg");
+const goldCoinIcon = assetUrl("images/GoldCoinIcon.svg");
+const upgradeIcon = assetUrl("images/UpgradeIconWhite.svg");
 
 export interface MenuElementParams {
   myPlayer: PlayerView;
@@ -101,6 +101,7 @@ export const COLORS = {
   breakAlly: "#dc2626",
   breakAllyNoDebuff: "#d97706",
   delete: "#ef4444",
+  sell: "#b45309",
   info: "#475569",
   target: "#ef4444",
   attack: "#ef4444",
@@ -131,6 +132,7 @@ export enum Slot {
   Ally = "ally",
   Back = "back",
   Delete = "delete",
+  Upgrade = "upgrade",
 }
 
 function isFriendlyTarget(params: MenuElementParams): boolean {
@@ -627,79 +629,84 @@ const donateGoldRadialElement: MenuElement = {
   },
 };
 
-const deleteUnitElement: MenuElement = {
-  id: Slot.Delete,
-  name: "delete",
-  cooldown: (params: MenuElementParams) => params.myPlayer.deleteUnitCooldown(),
-  disabled: (params: MenuElementParams) => {
-    const tileOwner = params.game.owner(params.tile);
-    const isLand = params.game.isLand(params.tile);
-
-    if (!tileOwner.isPlayer() || tileOwner.id() !== params.myPlayer.id()) {
-      return true;
-    }
-
-    if (!isLand) {
-      return true;
-    }
-
-    if (params.game.inSpawnPhase()) {
-      return true;
-    }
-
-    if (params.myPlayer.deleteUnitCooldown() > 0) {
-      return true;
-    }
-
-    const DELETE_SELECTION_RADIUS = 5;
-    const myUnits = params.myPlayer
-      .units()
-      .filter(
-        (unit) =>
-          !unit.isUnderConstruction() &&
-          unit.markedForDeletion() === false &&
-          Structures.has(unit.type()) &&
-          params.game.manhattanDist(unit.tile(), params.tile) <=
-            DELETE_SELECTION_RADIUS,
-      );
-
-    return myUnits.length === 0;
-  },
-  icon: xIcon,
-  color: COLORS.delete,
-  tooltipKeys: [
-    {
-      key: "radial_menu.delete_unit_title",
-      className: "title",
+// Sells the structure a tap selects (PlayerActions.sellableStructure): the
+// delete intent, which now refunds SELL_REFUND_PERCENT of its value.
+function sellStructureElement(params: MenuElementParams): MenuElement {
+  const selected = params.playerActions.sellableStructure;
+  const refund = selected?.refund ?? 0n;
+  return {
+    id: Slot.Delete,
+    name: "sell",
+    cooldown: (p: MenuElementParams) => p.myPlayer.deleteUnitCooldown(),
+    disabled: (p: MenuElementParams) =>
+      p.playerActions.sellableStructure === undefined ||
+      p.game.inSpawnPhase() ||
+      p.myPlayer.deleteUnitCooldown() > 0,
+    icon: goldCoinIcon,
+    color: COLORS.sell,
+    tooltipItems: [
+      {
+        text: translateText("radial_menu.sell_structure_title"),
+        className: "title",
+      },
+      {
+        text:
+          selected === undefined
+            ? translateText("radial_menu.sell_structure_none")
+            : `+${renderNumber(refund)} ${translateText("player_panel.gold")}`,
+        className: selected === undefined ? "description" : "cost",
+      },
+    ],
+    action: (p: MenuElementParams) => {
+      const unit = p.playerActions.sellableStructure;
+      if (unit !== undefined) {
+        p.playerActionHandler.handleDeleteUnit(unit.unitId);
+      }
+      p.closeMenu();
     },
-    {
-      key: "radial_menu.delete_unit_description",
-      className: "description",
-    },
-  ],
-  action: (params: MenuElementParams) => {
-    const DELETE_SELECTION_RADIUS = 5;
-    const myUnits = params.myPlayer
-      .units()
-      .filter(
-        (unit) =>
-          !unit.isUnderConstruction() &&
-          unit.markedForDeletion() === false &&
-          Structures.has(unit.type()) &&
-          params.game.manhattanDist(unit.tile(), params.tile) <=
-            DELETE_SELECTION_RADIUS,
+  };
+}
+
+// One level up for the structure a tap selects, when it can be upgraded.
+function upgradeStructureElement(
+  params: MenuElementParams,
+): MenuElement | null {
+  const selected = params.playerActions.sellableStructure;
+  if (selected === undefined) return null;
+  const buildable = params.playerActions.buildableUnits.find(
+    (bu) => bu.canUpgrade === selected.unitId,
+  );
+  if (buildable === undefined) return null;
+  const cost = bulkCost(buildable, 1);
+  const affordable = (p: MenuElementParams) =>
+    (p.game.myPlayer()?.gold() ?? 0n) >= cost;
+  return {
+    id: Slot.Upgrade,
+    name: "upgrade",
+    disabled: (p: MenuElementParams) => !affordable(p),
+    icon: upgradeIcon,
+    color: (p: MenuElementParams) =>
+      affordable(p) ? COLORS.build : COLORS.disabled,
+    tooltipItems: [
+      {
+        text: translateText("radial_menu.upgrade_structure_title", {
+          level: (selected.level + 1).toString(),
+        }),
+        className: "title",
+      },
+      {
+        text: `${renderNumber(cost)} ${translateText("player_panel.gold")}`,
+        className: "cost",
+      },
+    ],
+    action: (p: MenuElementParams) => {
+      p.eventBus.emit(
+        new SendUpgradeStructureIntentEvent(selected.unitId, selected.type, 1),
       );
-
-    const closestUnit = findClosestBy(myUnits, (unit) =>
-      params.game.manhattanDist(unit.tile(), params.tile),
-    );
-    if (closestUnit) {
-      params.playerActionHandler.handleDeleteUnit(closestUnit.id());
-    }
-
-    params.closeMenu();
-  },
-};
+      p.closeMenu();
+    },
+  };
+}
 
 export const buildMenuElement: MenuElement = {
   id: Slot.Build,
@@ -811,7 +818,12 @@ export const rootMenuElement: MenuElement = {
     const menuItems: (MenuElement | null)[] = [
       infoMenuElement,
       ...(isOwnTerritory
-        ? [deleteUnitElement, allyRequestElement, buildMenuElement]
+        ? [
+            sellStructureElement(params),
+            upgradeStructureElement(params),
+            allyRequestElement,
+            buildMenuElement,
+          ]
         : [
             isAllied && !isDisconnected ? allyBreakElement : boatMenuElement,
             inExtensionWindow ? allyExtendElement : allyRequestElement,

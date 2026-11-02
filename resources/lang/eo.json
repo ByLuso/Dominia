@@ -1071,10 +1071,7 @@
     "title": "Atendante Ludkomencon...",
     "waiting_for_players": "Atendante ludantojn"
   },
-  "radial_menu": {
-    "delete_unit_description": "Alklaku por forigi la plej proksiman trupunon",
-    "delete_unit_title": "Forigi trupunon"
-  },
+  "radial_menu": {},
   "relation": {
     "default": "Defaŭlta",
     "distrustful": "Malfidema",

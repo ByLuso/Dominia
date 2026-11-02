@@ -462,6 +462,12 @@ export interface Player extends PlayerLike {
   donateTroops(recipient: Player, troops: number): boolean;
   donateGold(recipient: Player, gold: Gold): boolean;
   canDeleteUnit(): boolean;
+  /**
+   * Gold selling `unit` pays: SELL_REFUND_PERCENT of what its levels cost as
+   * this player's latest buys of its type. 0 for anything not a finished
+   * structure.
+   */
+  structureSellRefund(unit: Unit): Gold;
   recordDeleteUnit(): void;
   canEmbargoAll(): boolean;
   recordEmbargoAll(): void;

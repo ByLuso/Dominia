@@ -1687,8 +1687,6 @@
     "visit_store": "Áruház felkeresése"
   },
   "radial_menu": {
-    "delete_unit_description": "Kattints a legközelebbi egység törléséhez",
-    "delete_unit_title": "Egység törlése",
     "upgrade_x": "x{amount} fejlesztés"
   },
   "relation": {

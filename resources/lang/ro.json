@@ -2079,8 +2079,6 @@
     "visit_store": "Vizitează magazinul"
   },
   "radial_menu": {
-    "delete_unit_description": "Click pentru a șterge cea mai apropiată unitate",
-    "delete_unit_title": "Șterge unitatea",
     "upgrade_x": "Actualizează x{amount}"
   },
   "relation": {

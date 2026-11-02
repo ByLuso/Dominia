@@ -452,7 +452,9 @@ export class EngineConfig extends Config {
           Math.min(player.unitsOwned(type), player.unitsConstructed(type)),
         0,
       );
-      return BigInt(costFn(numUnits + extraUnits));
+      // extraUnits may be negative, to price units already bought
+      // (Player.structureSellRefund).
+      return BigInt(costFn(Math.max(0, numUnits + extraUnits)));
     };
   }
 

@@ -597,8 +597,5 @@
     "not_authorized": "Non tes autorización para acceder a este sitio.",
     "contact_admin": "Se cres que esta mensaxe é un erro, por favor contacta co administrador do sitio."
   },
-  "radial_menu": {
-    "delete_unit_title": "Eliminar unidade",
-    "delete_unit_description": "Preme para eliminar a unidade máis próxima"
-  }
+  "radial_menu": {}
 }

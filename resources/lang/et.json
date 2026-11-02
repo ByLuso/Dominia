@@ -876,10 +876,7 @@
     "button_title": "Vali Lipp!",
     "search_flag": "Otsi..."
   },
-  "radial_menu": {
-    "delete_unit_title": "Kustuta Üksus",
-    "delete_unit_description": "Klõpsa, et kustutada lähim üksus"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "Avatar"
   },

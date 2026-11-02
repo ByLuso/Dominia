@@ -1002,10 +1002,7 @@
     "button_title": "选一个旗帜！",
     "search_flag": "搜索……"
   },
-  "radial_menu": {
-    "delete_unit_title": "删除单位",
-    "delete_unit_description": "点击删除最近的单位"
-  },
+  "radial_menu": {},
   "discord_user_header": {
     "avatar_alt": "头像"
   },
